@@ -229,14 +229,14 @@ int main(void)
     /* USER CODE BEGIN 3 */
 
 
-	  //DHT11_get_value();
+	  DHT11_get_value();
 	  //get_time();
 
 	  	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_result_dma, adc_channel_lenght);
 	  //mode_planner(0,1);
 	  //mode_manual(mode_manual_start);
 	  menu_func(menu_lcd_refresh, 0);
-	  delay_us(100);
+	  HAL_Delay(1000);
 
 
 	  /*
