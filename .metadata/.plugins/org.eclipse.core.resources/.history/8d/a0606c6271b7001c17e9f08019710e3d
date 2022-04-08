@@ -88,12 +88,9 @@ int relay_set[2];
 int relay_end_flag = 0;
 int line_relays[] = {line0_relay_Pin, line1_relay_Pin};
 
-int planner_start_time_hours = 17; //0-24
-int planner_start_time_mins = 30; //0-60
-
 /* Auto Mode Variables */
-int auto_modes[2][4][9] = {{{1,20,0,0,0,1,0,0,0}, {2,20,0,1,0,0,0,1,0}, {2,30,0,1,0,0,1,0,0}, {2,60,0,1,0,0,1,0,0}},
-							{{1,30,0,0,0,1,0,0,0}, {2,30,0,1,0,0,0,1,0}, {3,60,0,1,0,1,0,1,0}, {3,120,0,1,0,1,0,1,0}}};
+int auto_modes[2][4][9] = {{{1,20,0,0,0,1,0,0,0}, {2,30,0,1,0,0,1,0,0}, {2,60,0,1,0,0,1,0,0}},
+							{{1,30,0,0,0,1,0,0,0}, {3,60,0,1,0,1,0,1,0}, {3,120,0,1,0,1,0,1,0}}};
 
 // 0:High Temp | 1:Low Temp | 2:High Moist | 3:Low Moist
 int auto_limits[4] = {35,20,60,40};
@@ -104,9 +101,6 @@ int auto_irrigation_time[2];
 /*	Index = 0:Sapling | 1:Tree
 	Value = 0:Low | 1:Mid | 2:High */
 int auto_mode_param[2];
-
-int auto_start_time_hours = 18; //2400 format
-int auto_start_time_mins = 0;
 
 int auto_avg_temp = 0;
 int auto_avg_airhum = 0;
@@ -837,7 +831,6 @@ void mode_planner(int auto_mode_flag, int start){
 }
 
 void mode_auto(int start){
-/*
 //Saat geldi mi
 	//yagisli mi ya da genel toprak nemi >80
 	//Gun atlandi mi
@@ -850,13 +843,13 @@ void mode_auto(int start){
 					//o modun sulama gunu bugun mu
 						//evet: moda gore sula
 						///hayir: skip
-*/
 
-//Function is called with alarm
+
+//Saat geldiyse func cagiriliyor
+
 	if(adc_result_dma[4] > 2000 || adc_total_moist_avg > 80){
 		//Skip Day
-		auto_week_skip_vector[currDate.WeekDay-1] = 1;
-
+		auto_week_skip_vector[(currDate.WeekDay)-1] = 1;
 		if(week_reset_flag){
 			if(currDate.WeekDay == reset_day){
 				week_reset_flag = 1;
@@ -879,12 +872,9 @@ void mode_auto(int start){
 					auto_week_skip_vector[x] = 0;
 				}
 			}
-		}else{
-			auto_week_skip_vector[currDate.WeekDay-1] = 0;
 		}
 	}
-
-	//Day Skipped?
+	//Gun atlandi mi
 	if(auto_week_skip_vector[(currDate.WeekDay)-1] == 0){
 		//Rain or >80 humidity (Just Rained)
 		for(int x = 0; x < adc_line_number; x++){
@@ -1061,7 +1051,6 @@ void menu_func(int refresh, int reset){
 				if(menu_click){
 					current_page = 6;
 					menu_click = 0;
-					mode_manual(1);
 					menu_func(1, 0);
 					break;
 				}else if(menu_down){
@@ -1108,7 +1097,6 @@ void menu_func(int refresh, int reset){
 				if(menu_click){
 					current_page = 4;
 					menu_click = 0;
-					mode_manual(0);
 					menu_func(1, 0);
 				}else{
 					current_page = 6;

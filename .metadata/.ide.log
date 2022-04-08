@@ -5094,3 +5094,7 @@
 2022-04-08 13:11:35,165 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
 2022-04-08 13:11:35,309 [INFO] RetryExec:97 - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://dl.bintray.com:80: The target server failed to respond
 2022-04-08 13:11:35,309 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
+2022-04-08 21:25:59,351 [INFO] Activator:170 - 
+
+
+2022-04-08 21:25:59,353 [INFO] Activator:171 - !SESSION log4j initialized

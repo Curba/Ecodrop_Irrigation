@@ -88,9 +88,6 @@ int relay_set[2];
 int relay_end_flag = 0;
 int line_relays[] = {line0_relay_Pin, line1_relay_Pin};
 
-int planner_start_time_hours = 17; //0-24
-int planner_start_time_mins = 30; //0-60
-
 /* Auto Mode Variables */
 int auto_modes[2][4][9] = {{{1,20,0,0,0,1,0,0,0}, {2,20,0,1,0,0,0,1,0}, {2,30,0,1,0,0,1,0,0}, {2,60,0,1,0,0,1,0,0}},
 							{{1,30,0,0,0,1,0,0,0}, {2,30,0,1,0,0,0,1,0}, {3,60,0,1,0,1,0,1,0}, {3,120,0,1,0,1,0,1,0}}};
@@ -105,8 +102,7 @@ int auto_irrigation_time[2];
 	Value = 0:Low | 1:Mid | 2:High */
 int auto_mode_param[2];
 
-int auto_start_time_hours = 18; //2400 format
-int auto_start_time_mins = 0;
+int auto_start_time = 1800; //2400 format
 
 int auto_avg_temp = 0;
 int auto_avg_airhum = 0;

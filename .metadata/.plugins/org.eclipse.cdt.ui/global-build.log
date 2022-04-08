@@ -1238,3 +1238,37 @@ Finished building: ed_v1.0.bin
  
 Finished building: ed_v1.0.list
  
+22:23:55 **** Incremental Build of configuration Debug for project ed_v1.0 ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F401xC -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "ed_v1.0.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\STM32F401CCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="ed_v1.0.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: ed_v1.0.elf
+ 
+arm-none-eabi-objdump -h -S  ed_v1.0.elf  > "ed_v1.0.list"
+arm-none-eabi-objcopy  -O binary  ed_v1.0.elf  "ed_v1.0.bin"
+arm-none-eabi-size   ed_v1.0.elf 
+   text	   data	    bss	    dec	    hex	filename
+  25612	    120	   2168	  27900	   6cfc	ed_v1.0.elf
+Finished building: default.size.stdout
+ 
+Finished building: ed_v1.0.bin
+ 
+Finished building: ed_v1.0.list
+ 
+23:09:36 **** Incremental Build of configuration Debug for project ed_v1.0 ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F401xC -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "ed_v1.0.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\STM32F401CCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="ed_v1.0.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: ed_v1.0.elf
+ 
+arm-none-eabi-objdump -h -S  ed_v1.0.elf  > "ed_v1.0.list"
+arm-none-eabi-objcopy  -O binary  ed_v1.0.elf  "ed_v1.0.bin"
+arm-none-eabi-size   ed_v1.0.elf 
+   text	   data	    bss	    dec	    hex	filename
+  25764	    120	   2168	  28052	   6d94	ed_v1.0.elf
+Finished building: default.size.stdout
+Finished building: ed_v1.0.bin
+ 
+ 
+Finished building: ed_v1.0.list
+ 
