@@ -113,8 +113,8 @@ int set_year = 0;
 uint8_t Rh_byte1, Rh_byte2, Temp_byte1, Temp_byte2;
 uint16_t SUM, RH, TEMP;
 
-float Temperature = 0;
-float Humidity = 0;
+float inst_temperature = 0;
+float inst_humidity = 0;
 uint8_t Presence = 0;
 
 /* DEBUG Variables */
@@ -228,19 +228,9 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  DHT11_Start();
-	  	Presence = DHT11_Check_Response();
-	  	Rh_byte1 = DHT11_Read ();
-	  	Rh_byte2 = DHT11_Read ();
-	  	Temp_byte1 = DHT11_Read ();
-	  	Temp_byte2 = DHT11_Read ();
-	  	SUM = DHT11_Read();
-	  	TEMP = Temp_byte1;
-	  	RH = Rh_byte1;
-	  	Temperature = (float) TEMP;
-	  	Humidity = (float) RH;
 
-	  //DHT11_get_value();
+
+	  DHT11_get_value();
 	  get_time();
 
 	  	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_result_dma, adc_channel_lenght);
@@ -777,8 +767,8 @@ void DHT11_get_value(){
 	SUM = DHT11_Read();
 	TEMP = Temp_byte1;
 	RH = Rh_byte1;
-	Temperature = (float) TEMP;
-	Humidity = (float) RH;
+	inst_temperature = (float) TEMP;
+	inst_humidity = (float) RH;
 }
 
 /*-----------------DHT11 END----------------------------*/
@@ -867,6 +857,7 @@ void set_time (int set_hours, int set_minutes, int set_seconds, int set_weekday,
 
 void get_time(){
 	HAL_RTC_GetTime(&hrtc, &currTime, RTC_FORMAT_BIN);
+
 	HAL_RTC_GetDate(&hrtc, &currDate, RTC_FORMAT_BIN);
 	sprintf(timeBuff,"%d,%d.%d", currTime.Hours, currTime.Minutes, currTime.Seconds);
 	sprintf(dateBuff,"%02d-%02d-%2d",currDate.Date, currDate.Month, 2000 + currDate.Year);

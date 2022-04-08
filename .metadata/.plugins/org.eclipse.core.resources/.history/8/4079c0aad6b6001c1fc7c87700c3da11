@@ -113,8 +113,8 @@ int set_year = 0;
 uint8_t Rh_byte1, Rh_byte2, Temp_byte1, Temp_byte2;
 uint16_t SUM, RH, TEMP;
 
-float Temperature = 0;
-float Humidity = 0;
+float inst_temperature = 0;
+float inst_humidity = 0;
 uint8_t Presence = 0;
 
 /* DEBUG Variables */
@@ -132,10 +132,10 @@ int testDummy_manual = 0;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
-static void MX_ADC1_Init(void);
-static void MX_I2C1_Init(void);
 static void MX_RTC_Init(void);
+static void MX_I2C1_Init(void);
 static void MX_TIM1_Init(void);
+static void MX_ADC1_Init(void);
 /* USER CODE BEGIN PFP */
 
 //MENU
@@ -198,10 +198,10 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
-  MX_ADC1_Init();
-  MX_I2C1_Init();
   MX_RTC_Init();
+  MX_I2C1_Init();
   MX_TIM1_Init();
+  MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
   //Initializes line average array
 
@@ -228,19 +228,9 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  DHT11_Start();
-	  	Presence = DHT11_Check_Response();
-	  	Rh_byte1 = DHT11_Read ();
-	  	Rh_byte2 = DHT11_Read ();
-	  	Temp_byte1 = DHT11_Read ();
-	  	Temp_byte2 = DHT11_Read ();
-	  	SUM = DHT11_Read();
-	  	TEMP = Temp_byte1;
-	  	RH = Rh_byte1;
-	  	Temperature = (float) TEMP;
-	  	Humidity = (float) RH;
 
-	  //DHT11_get_value();
+
+	  DHT11_get_value();
 	  get_time();
 
 	  	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_result_dma, adc_channel_lenght);
@@ -310,9 +300,8 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_TIM|RCC_PERIPHCLK_RTC;
+  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC;
   PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
-  PeriphClkInitStruct.TIMPresSelection = RCC_TIMPRES_ACTIVATED;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -475,7 +464,7 @@ static void MX_RTC_Init(void)
   hrtc.Instance = RTC;
   hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
   hrtc.Init.AsynchPrediv = 127;
-  hrtc.Init.SynchPrediv = 280;
+  hrtc.Init.SynchPrediv = 284;
   hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
   hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
   hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
@@ -499,10 +488,10 @@ static void MX_RTC_Init(void)
   {
     Error_Handler();
   }
-  sDate.WeekDay = RTC_WEEKDAY_MONDAY;
-  sDate.Month = RTC_MONTH_MARCH;
-  sDate.Date = 0x4;
-  sDate.Year = 0x0;
+  sDate.WeekDay = RTC_WEEKDAY_FRIDAY;
+  sDate.Month = RTC_MONTH_APRIL;
+  sDate.Date = 0x8;
+  sDate.Year = 0x22;
 
   if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD) != HAL_OK)
   {
@@ -510,8 +499,8 @@ static void MX_RTC_Init(void)
   }
   /** Enable the Alarm A
   */
-  sAlarm.AlarmTime.Hours = 0x3;
-  sAlarm.AlarmTime.Minutes = 0x45;
+  sAlarm.AlarmTime.Hours = 0x0;
+  sAlarm.AlarmTime.Minutes = 0x0;
   sAlarm.AlarmTime.Seconds = 0x0;
   sAlarm.AlarmTime.SubSeconds = 0x0;
   sAlarm.AlarmTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
@@ -519,7 +508,7 @@ static void MX_RTC_Init(void)
   sAlarm.AlarmMask = RTC_ALARMMASK_NONE;
   sAlarm.AlarmSubSecondMask = RTC_ALARMSUBSECONDMASK_ALL;
   sAlarm.AlarmDateWeekDaySel = RTC_ALARMDATEWEEKDAYSEL_DATE;
-  sAlarm.AlarmDateWeekDay = 0x4;
+  sAlarm.AlarmDateWeekDay = 0x1;
   sAlarm.Alarm = RTC_ALARM_A;
   if (HAL_RTC_SetAlarm(&hrtc, &sAlarm, RTC_FORMAT_BCD) != HAL_OK)
   {
@@ -777,8 +766,8 @@ void DHT11_get_value(){
 	SUM = DHT11_Read();
 	TEMP = Temp_byte1;
 	RH = Rh_byte1;
-	Temperature = (float) TEMP;
-	Humidity = (float) RH;
+	inst_temperature = (float) TEMP;
+	inst_humidity = (float) RH;
 }
 
 /*-----------------DHT11 END----------------------------*/

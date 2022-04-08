@@ -228,19 +228,9 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  DHT11_Start();
-	  	Presence = DHT11_Check_Response();
-	  	Rh_byte1 = DHT11_Read ();
-	  	Rh_byte2 = DHT11_Read ();
-	  	Temp_byte1 = DHT11_Read ();
-	  	Temp_byte2 = DHT11_Read ();
-	  	SUM = DHT11_Read();
-	  	TEMP = Temp_byte1;
-	  	RH = Rh_byte1;
-	  	Temperature = (float) TEMP;
-	  	Humidity = (float) RH;
 
-	  //DHT11_get_value();
+
+	  DHT11_get_value();
 	  get_time();
 
 	  	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_result_dma, adc_channel_lenght);
