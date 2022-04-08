@@ -92,3 +92,174 @@ Finished building: ed_v1.0.bin
  
 Finished building: ed_v1.0.list
  
+03:32:53 **** Incremental Build of configuration Debug for project ed_v1.0 ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F401xC -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "ed_v1.0.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\STM32F401CCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="ed_v1.0.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: ed_v1.0.elf
+ 
+arm-none-eabi-objdump -h -S  ed_v1.0.elf  > "ed_v1.0.list"
+arm-none-eabi-objcopy  -O binary  ed_v1.0.elf  "ed_v1.0.bin"
+arm-none-eabi-size   ed_v1.0.elf 
+   text	   data	    bss	    dec	    hex	filename
+  22652	     20	   2076	  24748	   60ac	ed_v1.0.elf
+Finished building: default.size.stdout
+ 
+Finished building: ed_v1.0.bin
+ 
+Finished building: ed_v1.0.list
+ 
+03:37:17 **** Incremental Build of configuration Debug for project ed_v1.0 ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F401xC -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "ed_v1.0.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\STM32F401CCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="ed_v1.0.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: ed_v1.0.elf
+ 
+arm-none-eabi-objdump -h -S  ed_v1.0.elf  > "ed_v1.0.list"
+arm-none-eabi-objcopy  -O binary  ed_v1.0.elf  "ed_v1.0.bin"
+arm-none-eabi-size   ed_v1.0.elf 
+   text	   data	    bss	    dec	    hex	filename
+  22652	     20	   2092	  24764	   60bc	ed_v1.0.elf
+Finished building: default.size.stdout
+ 
+Finished building: ed_v1.0.bin
+ 
+Finished building: ed_v1.0.list
+ 
+03:44:56 **** Incremental Build of configuration Debug for project ed_v1.0 ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F401xC -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c:91:43: warning: excess elements in array initializer
+   91 | int auto_modes[2][3][6] = {{{1,20,0,0,0,1,0,0,0}, {2,30,0,1,0,0,1,0,0}, {2,60,0,1,0,0,1,0,0}},
+      |                                           ^
+../Core/Src/main.c:91:43: note: (near initialization for 'auto_modes[0][0]')
+../Core/Src/main.c:91:45: warning: excess elements in array initializer
+   91 | int auto_modes[2][3][6] = {{{1,20,0,0,0,1,0,0,0}, {2,30,0,1,0,0,1,0,0}, {2,60,0,1,0,0,1,0,0}},
+      |                                             ^
+../Core/Src/main.c:91:45: note: (near initialization for 'auto_modes[0][0]')
+../Core/Src/main.c:91:47: warning: excess elements in array initializer
+   91 | int auto_modes[2][3][6] = {{{1,20,0,0,0,1,0,0,0}, {2,30,0,1,0,0,1,0,0}, {2,60,0,1,0,0,1,0,0}},
+      |                                               ^
+../Core/Src/main.c:91:47: note: (near initialization for 'auto_modes[0][0]')
+../Core/Src/main.c:91:65: warning: excess elements in array initializer
+   91 | int auto_modes[2][3][6] = {{{1,20,0,0,0,1,0,0,0}, {2,30,0,1,0,0,1,0,0}, {2,60,0,1,0,0,1,0,0}},
+      |                                                                 ^
+../Core/Src/main.c:91:65: note: (near initialization for 'auto_modes[0][1]')
+../Core/Src/main.c:91:67: warning: excess elements in array initializer
+   91 | int auto_modes[2][3][6] = {{{1,20,0,0,0,1,0,0,0}, {2,30,0,1,0,0,1,0,0}, {2,60,0,1,0,0,1,0,0}},
+      |                                                                   ^
+../Core/Src/main.c:91:67: note: (near initialization for 'auto_modes[0][1]')
+../Core/Src/main.c:91:69: warning: excess elements in array initializer
+   91 | int auto_modes[2][3][6] = {{{1,20,0,0,0,1,0,0,0}, {2,30,0,1,0,0,1,0,0}, {2,60,0,1,0,0,1,0,0}},
+      |                                                                     ^
+../Core/Src/main.c:91:69: note: (near initialization for 'auto_modes[0][1]')
+../Core/Src/main.c:91:87: warning: excess elements in array initializer
+   91 | int auto_modes[2][3][6] = {{{1,20,0,0,0,1,0,0,0}, {2,30,0,1,0,0,1,0,0}, {2,60,0,1,0,0,1,0,0}},
+      |                                                                                       ^
+../Core/Src/main.c:91:87: note: (near initialization for 'auto_modes[0][2]')
+../Core/Src/main.c:91:89: warning: excess elements in array initializer
+   91 | int auto_modes[2][3][6] = {{{1,20,0,0,0,1,0,0,0}, {2,30,0,1,0,0,1,0,0}, {2,60,0,1,0,0,1,0,0}},
+      |                                                                                         ^
+../Core/Src/main.c:91:89: note: (near initialization for 'auto_modes[0][2]')
+../Core/Src/main.c:91:91: warning: excess elements in array initializer
+   91 | int auto_modes[2][3][6] = {{{1,20,0,0,0,1,0,0,0}, {2,30,0,1,0,0,1,0,0}, {2,60,0,1,0,0,1,0,0}},
+      |                                                                                           ^
+../Core/Src/main.c:91:91: note: (near initialization for 'auto_modes[0][2]')
+../Core/Src/main.c:92:23: warning: excess elements in array initializer
+   92 |        {{1,30,0,0,0,1,0,0,0}, {3,60,0,1,0,1,0,1,0}, {3,120,0,1,0,1,0,1,0}}};
+      |                       ^
+../Core/Src/main.c:92:23: note: (near initialization for 'auto_modes[1][0]')
+../Core/Src/main.c:92:25: warning: excess elements in array initializer
+   92 |        {{1,30,0,0,0,1,0,0,0}, {3,60,0,1,0,1,0,1,0}, {3,120,0,1,0,1,0,1,0}}};
+      |                         ^
+../Core/Src/main.c:92:25: note: (near initialization for 'auto_modes[1][0]')
+../Core/Src/main.c:92:27: warning: excess elements in array initializer
+   92 |        {{1,30,0,0,0,1,0,0,0}, {3,60,0,1,0,1,0,1,0}, {3,120,0,1,0,1,0,1,0}}};
+      |                           ^
+../Core/Src/main.c:92:27: note: (near initialization for 'auto_modes[1][0]')
+../Core/Src/main.c:92:45: warning: excess elements in array initializer
+   92 |        {{1,30,0,0,0,1,0,0,0}, {3,60,0,1,0,1,0,1,0}, {3,120,0,1,0,1,0,1,0}}};
+      |                                             ^
+../Core/Src/main.c:92:45: note: (near initialization for 'auto_modes[1][1]')
+../Core/Src/main.c:92:47: warning: excess elements in array initializer
+   92 |        {{1,30,0,0,0,1,0,0,0}, {3,60,0,1,0,1,0,1,0}, {3,120,0,1,0,1,0,1,0}}};
+      |                                               ^
+../Core/Src/main.c:92:47: note: (near initialization for 'auto_modes[1][1]')
+../Core/Src/main.c:92:49: warning: excess elements in array initializer
+   92 |        {{1,30,0,0,0,1,0,0,0}, {3,60,0,1,0,1,0,1,0}, {3,120,0,1,0,1,0,1,0}}};
+      |                                                 ^
+../Core/Src/main.c:92:49: note: (near initialization for 'auto_modes[1][1]')
+../Core/Src/main.c:92:68: warning: excess elements in array initializer
+   92 |        {{1,30,0,0,0,1,0,0,0}, {3,60,0,1,0,1,0,1,0}, {3,120,0,1,0,1,0,1,0}}};
+      |                                                                    ^
+../Core/Src/main.c:92:68: note: (near initialization for 'auto_modes[1][2]')
+../Core/Src/main.c:92:70: warning: excess elements in array initializer
+   92 |        {{1,30,0,0,0,1,0,0,0}, {3,60,0,1,0,1,0,1,0}, {3,120,0,1,0,1,0,1,0}}};
+      |                                                                      ^
+../Core/Src/main.c:92:70: note: (near initialization for 'auto_modes[1][2]')
+../Core/Src/main.c:92:72: warning: excess elements in array initializer
+   92 |        {{1,30,0,0,0,1,0,0,0}, {3,60,0,1,0,1,0,1,0}, {3,120,0,1,0,1,0,1,0}}};
+      |                                                                        ^
+../Core/Src/main.c:92:72: note: (near initialization for 'auto_modes[1][2]')
+../Core/Src/main.c:106:72: error: expected ',' or ';' before 'set_month'
+  106 | int set_hours = 0,  set_minutes = 0, set_seconds = 0, set_weekday = 0  set_month = 0,  set_date = 0,  set_year = 0;
+      |                                                                        ^~~~~~~~~
+../Core/Src/main.c: In function 'set_time':
+../Core/Src/main.c:848:5: warning: implicit declaration of function '_Error_Handler'; did you mean 'Error_Handler'? [-Wimplicit-function-declaration]
+  848 |     _Error_Handler(__FILE__, __LINE__);
+      |     ^~~~~~~~~~~~~~
+      |     Error_Handler
+make: *** [Core/Src/subdir.mk:44: Core/Src/main.o] Error 1
+"make -j16 all" terminated with exit code 2. Build might be incomplete.
+03:45:32 **** Incremental Build of configuration Debug for project ed_v1.0 ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F401xC -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c:106:72: error: expected ',' or ';' before 'set_month'
+  106 | int set_hours = 0,  set_minutes = 0, set_seconds = 0, set_weekday = 0  set_month = 0,  set_date = 0,  set_year = 0;
+      |                                                                        ^~~~~~~~~
+../Core/Src/main.c: In function 'set_time':
+../Core/Src/main.c:848:5: warning: implicit declaration of function '_Error_Handler'; did you mean 'Error_Handler'? [-Wimplicit-function-declaration]
+  848 |     _Error_Handler(__FILE__, __LINE__);
+      |     ^~~~~~~~~~~~~~
+      |     Error_Handler
+make: *** [Core/Src/subdir.mk:44: Core/Src/main.o] Error 1
+"make -j16 all" terminated with exit code 2. Build might be incomplete.
+03:46:15 **** Incremental Build of configuration Debug for project ed_v1.0 ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F401xC -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'set_time':
+../Core/Src/main.c:848:5: warning: implicit declaration of function '_Error_Handler'; did you mean 'Error_Handler'? [-Wimplicit-function-declaration]
+  848 |     _Error_Handler(__FILE__, __LINE__);
+      |     ^~~~~~~~~~~~~~
+      |     Error_Handler
+arm-none-eabi-gcc -o "ed_v1.0.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\STM32F401CCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="ed_v1.0.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: ed_v1.0.elf
+ 
+arm-none-eabi-objdump -h -S  ed_v1.0.elf  > "ed_v1.0.list"
+arm-none-eabi-objcopy  -O binary  ed_v1.0.elf  "ed_v1.0.bin"
+arm-none-eabi-size   ed_v1.0.elf 
+   text	   data	    bss	    dec	    hex	filename
+  22672	     20	   2092	  24784	   60d0	ed_v1.0.elf
+Finished building: default.size.stdout
+ 
+Finished building: ed_v1.0.bin
+ 
+Finished building: ed_v1.0.list
+ 
+03:48:27 **** Incremental Build of configuration Debug for project ed_v1.0 ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F401xC -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "ed_v1.0.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\STM32F401CCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="ed_v1.0.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: ed_v1.0.elf
+ 
+arm-none-eabi-objdump -h -S  ed_v1.0.elf  > "ed_v1.0.list"
+arm-none-eabi-objcopy  -O binary  ed_v1.0.elf  "ed_v1.0.bin"
+arm-none-eabi-size   ed_v1.0.elf 
+   text	   data	    bss	    dec	    hex	filename
+  22680	     20	   2108	  24808	   60e8	ed_v1.0.elf
+Finished building: default.size.stdout
+ 
+Finished building: ed_v1.0.bin
+ 
+Finished building: ed_v1.0.list
+ 

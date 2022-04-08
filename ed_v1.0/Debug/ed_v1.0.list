@@ -7,43 +7,43 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
   1 .text         0000556c  08000194  08000194  00010194  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .rodata       00000174  08005700  08005700  00015700  2**2
+  2 .rodata       00000190  08005700  08005700  00015700  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  3 .ARM.extab    00000000  08005874  08005874  0002000c  2**0
+  3 .ARM.extab    00000000  08005890  08005890  0002000c  2**0
                   CONTENTS
-  4 .ARM          00000008  08005874  08005874  00015874  2**2
+  4 .ARM          00000008  08005890  08005890  00015890  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  5 .preinit_array 00000000  0800587c  0800587c  0002000c  2**0
+  5 .preinit_array 00000000  08005898  08005898  0002000c  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  6 .init_array   00000004  0800587c  0800587c  0001587c  2**2
+  6 .init_array   00000004  08005898  08005898  00015898  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  7 .fini_array   00000004  08005880  08005880  00015880  2**2
+  7 .fini_array   00000004  0800589c  0800589c  0001589c  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  8 .data         0000000c  20000000  08005884  00020000  2**2
+  8 .data         0000000c  20000000  080058a0  00020000  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  9 .bss          00000218  2000000c  08005890  0002000c  2**2
+  9 .bss          0000023c  2000000c  080058ac  0002000c  2**2
                   ALLOC
- 10 ._user_heap_stack 00000604  20000224  08005890  00020224  2**0
+ 10 ._user_heap_stack 00000600  20000248  080058ac  00020248  2**0
                   ALLOC
  11 .ARM.attributes 00000030  00000000  00000000  0002000c  2**0
                   CONTENTS, READONLY
- 12 .debug_info   000131a9  00000000  00000000  0002003c  2**0
+ 12 .debug_info   0001334c  00000000  00000000  0002003c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_abbrev 00002770  00000000  00000000  000331e5  2**0
+ 13 .debug_abbrev 00002770  00000000  00000000  00033388  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_aranges 000011e0  00000000  00000000  00035958  2**3
+ 14 .debug_aranges 000011f0  00000000  00000000  00035af8  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_ranges 000010e0  00000000  00000000  00036b38  2**3
+ 15 .debug_ranges 000010f0  00000000  00000000  00036ce8  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_macro  0001836c  00000000  00000000  00037c18  2**0
+ 16 .debug_macro  0001836c  00000000  00000000  00037dd8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   00015358  00000000  00000000  0004ff84  2**0
+ 17 .debug_line   000153cd  00000000  00000000  00050144  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    000a0178  00000000  00000000  000652dc  2**0
+ 18 .debug_str    000a020d  00000000  00000000  00065511  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000053  00000000  00000000  00105454  2**0
+ 19 .comment      00000053  00000000  00000000  0010571e  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00004c30  00000000  00000000  001054a8  2**2
+ 20 .debug_frame  00004c78  00000000  00000000  00105774  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -718,6 +718,7 @@ int main(void)
 
 	  DHT11_get_value();
  8000702:	f000 fcbd 	bl	8001080 <DHT11_get_value>
+
 	  	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_result_dma, adc_channel_lenght);
  8000706:	2307      	movs	r3, #7
  8000708:	461a      	mov	r2, r3
@@ -725,22 +726,22 @@ int main(void)
  800070c:	480a      	ldr	r0, [pc, #40]	; (8000738 <main+0x90>)
  800070e:	f001 fd75 	bl	80021fc <HAL_ADC_Start_DMA>
 	  //mode_planner(0,1);
-
-	 // mode_manual(mode_manual_start);
+	  //mode_manual(mode_manual_start);
 	  menu_func(menu_lcd_refresh, 0);
  8000712:	4b0a      	ldr	r3, [pc, #40]	; (800073c <main+0x94>)
  8000714:	681b      	ldr	r3, [r3, #0]
  8000716:	2100      	movs	r1, #0
  8000718:	4618      	mov	r0, r3
  800071a:	f000 fd3d 	bl	8001198 <menu_func>
-	  HAL_Delay(1000);
- 800071e:	f44f 707a 	mov.w	r0, #1000	; 0x3e8
- 8000722:	f001 fbc3 	bl	8001eac <HAL_Delay>
+	  delay_us(100);
+ 800071e:	2064      	movs	r0, #100	; 0x64
+ 8000720:	f000 fb1e 	bl	8000d60 <delay_us>
 	  DHT11_get_value();
- 8000726:	e7ec      	b.n	8000702 <main+0x5a>
+ 8000724:	e7ed      	b.n	8000702 <main+0x5a>
+ 8000726:	bf00      	nop
  8000728:	20000048 	.word	0x20000048
  800072c:	2000018c 	.word	0x2000018c
- 8000730:	200001b8 	.word	0x200001b8
+ 8000730:	200001cc 	.word	0x200001cc
  8000734:	20000058 	.word	0x20000058
  8000738:	200000c4 	.word	0x200000c4
  800073c:	20000028 	.word	0x20000028
@@ -1528,7 +1529,7 @@ static void MX_TIM1_Init(void)
  8000ba2:	3718      	adds	r7, #24
  8000ba4:	46bd      	mov	sp, r7
  8000ba6:	bd80      	pop	{r7, pc}
- 8000ba8:	200001b8 	.word	0x200001b8
+ 8000ba8:	200001cc 	.word	0x200001cc
  8000bac:	40010000 	.word	0x40010000
 
 08000bb0 <MX_DMA_Init>:
@@ -1820,7 +1821,7 @@ void delay_us (uint16_t us)
  8000d88:	f85d 7b04 	ldr.w	r7, [sp], #4
  8000d8c:	4770      	bx	lr
  8000d8e:	bf00      	nop
- 8000d90:	200001b8 	.word	0x200001b8
+ 8000d90:	200001cc 	.word	0x200001cc
 
 08000d94 <HAL_ADC_ConvCpltCallback>:
 
@@ -1948,7 +1949,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
  8000e74:	164a893b 	.word	0x164a893b
  8000e78:	20000110 	.word	0x20000110
  8000e7c:	20000048 	.word	0x20000048
- 8000e80:	0800584c 	.word	0x0800584c
+ 8000e80:	08005868 	.word	0x08005868
 
 08000e84 <HAL_GPIO_EXTI_Callback>:
 
@@ -2335,19 +2336,19 @@ void DHT11_get_value(){
  800110a:	bd80      	pop	{r7, pc}
  800110c:	20000044 	.word	0x20000044
  8001110:	200000bc 	.word	0x200000bc
- 8001114:	200001b4 	.word	0x200001b4
+ 8001114:	200001c8 	.word	0x200001c8
  8001118:	2000010c 	.word	0x2000010c
- 800111c:	2000021c 	.word	0x2000021c
- 8001120:	20000214 	.word	0x20000214
+ 800111c:	20000240 	.word	0x20000240
+ 8001120:	20000238 	.word	0x20000238
  8001124:	200000c0 	.word	0x200000c0
  8001128:	200000be 	.word	0x200000be
  800112c:	2000003c 	.word	0x2000003c
  8001130:	20000040 	.word	0x20000040
 
 08001134 <lcd_initial_message>:
-
-/*-----------------MODE FUNCTIONS END-----------------*/
-
+	sprintf(timeBuff,"%d,%d.%d", currTime.Hours, currTime.Minutes, currTime.Seconds);
+	sprintf(dateBuff,"%02d-%02d-%2d",currDate.Date, currDate.Month, 2000 + currDate.Year);
+}
 
 /*-----------------MENU BEGIN-------------------------*/
 void lcd_initial_message(){
@@ -2393,10 +2394,10 @@ void lcd_initial_message(){
 }
  8001184:	bf00      	nop
  8001186:	bd80      	pop	{r7, pc}
- 8001188:	08005700 	.word	0x08005700
- 800118c:	08005708 	.word	0x08005708
- 8001190:	08005714 	.word	0x08005714
- 8001194:	08005724 	.word	0x08005724
+ 8001188:	0800571c 	.word	0x0800571c
+ 800118c:	08005724 	.word	0x08005724
+ 8001190:	08005730 	.word	0x08005730
+ 8001194:	08005740 	.word	0x08005740
 
 08001198 <menu_func>:
 
@@ -2821,16 +2822,16 @@ void menu_func(int refresh, int reset){
  8001460:	2000002c 	.word	0x2000002c
  8001464:	20000034 	.word	0x20000034
  8001468:	20000030 	.word	0x20000030
- 800146c:	08005714 	.word	0x08005714
- 8001470:	08005724 	.word	0x08005724
- 8001474:	08005738 	.word	0x08005738
- 8001478:	0800574c 	.word	0x0800574c
- 800147c:	08005758 	.word	0x08005758
- 8001480:	08005764 	.word	0x08005764
- 8001484:	08005770 	.word	0x08005770
- 8001488:	0800577c 	.word	0x0800577c
- 800148c:	08005780 	.word	0x08005780
- 8001490:	08005790 	.word	0x08005790
+ 800146c:	08005730 	.word	0x08005730
+ 8001470:	08005740 	.word	0x08005740
+ 8001474:	08005754 	.word	0x08005754
+ 8001478:	08005768 	.word	0x08005768
+ 800147c:	08005774 	.word	0x08005774
+ 8001480:	08005780 	.word	0x08005780
+ 8001484:	0800578c 	.word	0x0800578c
+ 8001488:	08005798 	.word	0x08005798
+ 800148c:	0800579c 	.word	0x0800579c
+ 8001490:	080057ac 	.word	0x080057ac
 
 			case 5:
 				if(menu_click){
@@ -3286,19 +3287,19 @@ void menu_func(int refresh, int reset){
  800174c:	20000038 	.word	0x20000038
  8001750:	20000034 	.word	0x20000034
  8001754:	20000030 	.word	0x20000030
- 8001758:	08005798 	.word	0x08005798
- 800175c:	080057a0 	.word	0x080057a0
- 8001760:	080057a4 	.word	0x080057a4
- 8001764:	080057b0 	.word	0x080057b0
- 8001768:	080057b4 	.word	0x080057b4
- 800176c:	080057c0 	.word	0x080057c0
- 8001770:	080057cc 	.word	0x080057cc
- 8001774:	080057d8 	.word	0x080057d8
- 8001778:	080057e0 	.word	0x080057e0
- 800177c:	080057e8 	.word	0x080057e8
- 8001780:	080057f0 	.word	0x080057f0
- 8001784:	0800577c 	.word	0x0800577c
- 8001788:	080057f8 	.word	0x080057f8
+ 8001758:	080057b4 	.word	0x080057b4
+ 800175c:	080057bc 	.word	0x080057bc
+ 8001760:	080057c0 	.word	0x080057c0
+ 8001764:	080057cc 	.word	0x080057cc
+ 8001768:	080057d0 	.word	0x080057d0
+ 800176c:	080057dc 	.word	0x080057dc
+ 8001770:	080057e8 	.word	0x080057e8
+ 8001774:	080057f4 	.word	0x080057f4
+ 8001778:	080057fc 	.word	0x080057fc
+ 800177c:	08005804 	.word	0x08005804
+ 8001780:	0800580c 	.word	0x0800580c
+ 8001784:	08005798 	.word	0x08005798
+ 8001788:	08005814 	.word	0x08005814
 				}else if(menu_down){
  800178c:	4ba0      	ldr	r3, [pc, #640]	; (8001a10 <menu_func+0x878>)
  800178e:	681b      	ldr	r3, [r3, #0]
@@ -3714,16 +3715,16 @@ void menu_func(int refresh, int reset){
  8001a10:	20000034 	.word	0x20000034
  8001a14:	20000038 	.word	0x20000038
  8001a18:	20000030 	.word	0x20000030
- 8001a1c:	08005808 	.word	0x08005808
- 8001a20:	08005810 	.word	0x08005810
+ 8001a1c:	08005824 	.word	0x08005824
+ 8001a20:	0800582c 	.word	0x0800582c
  8001a24:	2000002c 	.word	0x2000002c
- 8001a28:	08005798 	.word	0x08005798
- 8001a2c:	08005818 	.word	0x08005818
- 8001a30:	0800581c 	.word	0x0800581c
- 8001a34:	0800577c 	.word	0x0800577c
- 8001a38:	08005828 	.word	0x08005828
- 8001a3c:	08005834 	.word	0x08005834
- 8001a40:	08005840 	.word	0x08005840
+ 8001a28:	080057b4 	.word	0x080057b4
+ 8001a2c:	08005834 	.word	0x08005834
+ 8001a30:	08005838 	.word	0x08005838
+ 8001a34:	08005798 	.word	0x08005798
+ 8001a38:	08005844 	.word	0x08005844
+ 8001a3c:	08005850 	.word	0x08005850
+ 8001a40:	0800585c 	.word	0x0800585c
  8001a44:	20000028 	.word	0x20000028
 
 08001a48 <Error_Handler>:
@@ -4545,11 +4546,11 @@ LoopFillZerobss:
   ldr r1, =_edata
  8001db4:	2000000c 	.word	0x2000000c
   ldr r2, =_sidata
- 8001db8:	08005884 	.word	0x08005884
+ 8001db8:	080058a0 	.word	0x080058a0
   ldr r2, =_sbss
  8001dbc:	2000000c 	.word	0x2000000c
   ldr r4, =_ebss
- 8001dc0:	20000224 	.word	0x20000224
+ 8001dc0:	20000248 	.word	0x20000248
 
 08001dc4 <DMA1_Stream0_IRQHandler>:
  * @retval None       
@@ -4712,7 +4713,7 @@ __weak void HAL_IncTick(void)
  8001e88:	4770      	bx	lr
  8001e8a:	bf00      	nop
  8001e8c:	20000008 	.word	0x20000008
- 8001e90:	20000220 	.word	0x20000220
+ 8001e90:	20000244 	.word	0x20000244
 
 08001e94 <HAL_GetTick>:
   * @note This function is declared as __weak to be overwritten in case of other 
@@ -4732,7 +4733,7 @@ __weak uint32_t HAL_GetTick(void)
  8001ea0:	f85d 7b04 	ldr.w	r7, [sp], #4
  8001ea4:	4770      	bx	lr
  8001ea6:	bf00      	nop
- 8001ea8:	20000220 	.word	0x20000220
+ 8001ea8:	20000244 	.word	0x20000244
 
 08001eac <HAL_Delay>:
   *       implementations in user file.
@@ -8214,7 +8215,7 @@ static uint32_t DMA_CalcBaseAndBitshift(DMA_HandleTypeDef *hdma)
  800316c:	4770      	bx	lr
  800316e:	bf00      	nop
  8003170:	aaaaaaab 	.word	0xaaaaaaab
- 8003174:	0800586c 	.word	0x0800586c
+ 8003174:	08005888 	.word	0x08005888
 
 08003178 <DMA_CheckFifoParam>:
   * @param  hdma       pointer to a DMA_HandleTypeDef structure that contains
@@ -11659,7 +11660,7 @@ HAL_StatusTypeDef HAL_RCC_ClockConfig(RCC_ClkInitTypeDef  *RCC_ClkInitStruct, ui
  800454a:	bf00      	nop
  800454c:	40023c00 	.word	0x40023c00
  8004550:	40023800 	.word	0x40023800
- 8004554:	08005854 	.word	0x08005854
+ 8004554:	08005870 	.word	0x08005870
  8004558:	20000000 	.word	0x20000000
  800455c:	20000004 	.word	0x20000004
 
@@ -11900,7 +11901,7 @@ uint32_t HAL_RCC_GetPCLK1Freq(void)
  8004700:	4618      	mov	r0, r3
  8004702:	bd80      	pop	{r7, pc}
  8004704:	40023800 	.word	0x40023800
- 8004708:	08005864 	.word	0x08005864
+ 8004708:	08005880 	.word	0x08005880
 
 0800470c <HAL_RCCEx_PeriphCLKConfig>:
   *        domain (RTC and RCC_BDCR register expect BKPSRAM) will be reset
@@ -14827,10 +14828,10 @@ HAL_StatusTypeDef HAL_TIMEx_MasterConfigSynchronization(TIM_HandleTypeDef *htim,
  80056c2:	4798      	blx	r3
  80056c4:	3601      	adds	r6, #1
  80056c6:	e7f2      	b.n	80056ae <__libc_init_array+0x1e>
- 80056c8:	0800587c 	.word	0x0800587c
- 80056cc:	0800587c 	.word	0x0800587c
- 80056d0:	0800587c 	.word	0x0800587c
- 80056d4:	08005880 	.word	0x08005880
+ 80056c8:	08005898 	.word	0x08005898
+ 80056cc:	08005898 	.word	0x08005898
+ 80056d0:	08005898 	.word	0x08005898
+ 80056d4:	0800589c 	.word	0x0800589c
 
 080056d8 <memset>:
  80056d8:	4402      	add	r2, r0

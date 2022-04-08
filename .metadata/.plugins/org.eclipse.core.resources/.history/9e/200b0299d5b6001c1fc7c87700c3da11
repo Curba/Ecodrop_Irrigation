@@ -239,7 +239,9 @@ int main(void)
 
 
 	  /*
-
+      HAL_RTC_GetTime(&hrtc, &currTime, RTC_FORMAT_BIN);
+      HAL_RTC_GetDate(&hrtc, &currDate, RTC_FORMAT_BIN);
+      sprintf(timeBuff,"%d,%d.%d", currTime.Hours, currTime.Minutes, currTime.Seconds);
       //lcd_clear ();
       lcd_send_string(timeBuff);
       lcd_put_cur(1, 0);
@@ -854,10 +856,8 @@ void set_time (int set_hours, int set_minutes, int set_seconds, int set_weekday,
 }
 
 void get_time(){
-	HAL_RTC_GetTime(&hrtc, &currTime, RTC_FORMAT_BIN);
-	HAL_RTC_GetDate(&hrtc, &currDate, RTC_FORMAT_BIN);
-	sprintf(timeBuff,"%d,%d.%d", currTime.Hours, currTime.Minutes, currTime.Seconds);
-	sprintf(dateBuff,"%02d-%02d-%2d",currDate.Date, currDate.Month, 2000 + currDate.Year);
+
+	 sprintf((char*)date,"%02d-%02d-%2d",gDate.Date, gDate.Month, 2000 + gDate.Year);
 }
 
 /*-----------------MENU BEGIN-------------------------*/
