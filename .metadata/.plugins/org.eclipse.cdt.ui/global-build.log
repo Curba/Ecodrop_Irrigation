@@ -1158,3 +1158,83 @@ Finished building: ed_v1.0.bin
  
 Finished building: ed_v1.0.list
  
+14:42:28 **** Incremental Build of configuration Debug for project ed_v1.0 ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F401xC -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'mode_auto':
+../Core/Src/main.c:873:13: error: expected '(' before '{' token
+  873 |     }else if{
+      |             ^
+      |             (
+../Core/Src/main.c:874:6: warning: statement with no effect [-Wunused-value]
+  874 |      auto_avg_temp > auto_limits[0]
+      |      ^~~~~~~~~~~~~
+make: *** [Core/Src/subdir.mk:44: Core/Src/main.o] Error 1
+"make -j16 all" terminated with exit code 2. Build might be incomplete.
+14:42:40 **** Incremental Build of configuration Debug for project ed_v1.0 ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F401xC -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "ed_v1.0.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\STM32F401CCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="ed_v1.0.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: ed_v1.0.elf
+ 
+arm-none-eabi-objdump -h -S  ed_v1.0.elf  > "ed_v1.0.list"
+arm-none-eabi-objcopy  -O binary  ed_v1.0.elf  "ed_v1.0.bin"
+arm-none-eabi-size   ed_v1.0.elf 
+   text	   data	    bss	    dec	    hex	filename
+  25612	    120	   2168	  27900	   6cfc	ed_v1.0.elf
+Finished building: default.size.stdout
+ 
+Finished building: ed_v1.0.bin
+ 
+Finished building: ed_v1.0.list
+ 
+15:45:48 **** Incremental Build of configuration Debug for project ed_v1.0 ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F401xC -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'mode_auto':
+../Core/Src/main.c:850:6: error: 'week_reset_flag' undeclared (first use in this function)
+  850 |   if(week_reset_flag){
+      |      ^~~~~~~~~~~~~~~
+../Core/Src/main.c:850:6: note: each undeclared identifier is reported only once for each function it appears in
+../Core/Src/main.c:851:27: error: 'reset_day' undeclared (first use in this function)
+  851 |    if(currDate.WeekDay == reset_day){
+      |                           ^~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:902:1: error: expected identifier or '(' before '}' token
+  902 | }
+      | ^
+make: *** [Core/Src/subdir.mk:44: Core/Src/main.o] Error 1
+"make -j16 all" terminated with exit code 2. Build might be incomplete.
+15:47:19 **** Incremental Build of configuration Debug for project ed_v1.0 ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F401xC -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c:909:1: error: expected identifier or '(' before '}' token
+  909 | }
+      | ^
+make: *** [Core/Src/subdir.mk:44: Core/Src/main.o] Error 1
+"make -j16 all" terminated with exit code 2. Build might be incomplete.
+15:47:26 **** Incremental Build of configuration Debug for project ed_v1.0 ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F401xC -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c:909:1: error: expected identifier or '(' before '}' token
+  909 | }
+      | ^
+make: *** [Core/Src/subdir.mk:44: Core/Src/main.o] Error 1
+"make -j16 all" terminated with exit code 2. Build might be incomplete.
+15:48:33 **** Incremental Build of configuration Debug for project ed_v1.0 ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F401xC -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "ed_v1.0.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\STM32F401CCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="ed_v1.0.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: ed_v1.0.elf
+ 
+arm-none-eabi-objdump -h -S  ed_v1.0.elf  > "ed_v1.0.list"
+arm-none-eabi-objcopy  -O binary  ed_v1.0.elf  "ed_v1.0.bin"
+arm-none-eabi-size   ed_v1.0.elf 
+   text	   data	    bss	    dec	    hex	filename
+  25612	    120	   2168	  27900	   6cfc	ed_v1.0.elf
+Finished building: default.size.stdout
+ 
+Finished building: ed_v1.0.bin
+ 
+Finished building: ed_v1.0.list
+ 

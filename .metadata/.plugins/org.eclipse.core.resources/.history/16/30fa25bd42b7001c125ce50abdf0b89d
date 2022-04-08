@@ -905,6 +905,7 @@ void mode_auto(int start){
 			}
 		}
 	}
+
 }
 
 /*-----------------MODE FUNCTIONS END-----------------*/

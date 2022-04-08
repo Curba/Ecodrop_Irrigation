@@ -107,9 +107,6 @@ int auto_avg_airhum = 0;
 
 int auto_week_skip_vector[7] = {0,0,0,0,0,0,0};
 
-int week_reset_flag = 0;
-int reset_day = 0;
-
 /* Real Time Clock */
 RTC_TimeTypeDef currTime = {0};
 RTC_DateTypeDef currDate = {0};
@@ -832,76 +829,56 @@ void mode_planner(int auto_mode_flag, int start){
 
 void mode_auto(int start){
 //Saat geldi mi
-	//yagisli mi ya da genel toprak nemi >80
 	//Gun atlandi mi
-		//evet: her modu ertesi gune aktar
-			//bu hafta 2. kez yagisliysa sulama yapma bu hafta
+		//yagisli mi ya da genel toprak nemi >80
 
-		//hayir:
-			//sapling + agac
-				//hafta ortalamalari hangi moda denk geliyor
-					//o modun sulama gunu bugun mu
-						//evet: moda gore sula
-						///hayir: skip
+			//evet: her modu ertesi gune aktar
+				//bu hafta 2. kez yagisliysa sulama yapma bu hafta
+
+			//hayir:
+				//sapling + agac
+					//hafta ortalamalari hangi moda denk geliyor
+						//o modun sulama gunu bugun mu
+							//evet: moda gore sula
+							///hayir: skip
 
 
 //Saat geldiyse func cagiriliyor
-
-	if(adc_result_dma[4] > 2000 || adc_total_moist_avg > 80){
-		//Skip Day
-		auto_week_skip_vector[(currDate.WeekDay)-1] = 1;
-		if(week_reset_flag){
-			if(currDate.WeekDay == reset_day){
-				week_reset_flag = 1;
-			}
-		}else{
-			//Repeated: Skip Rest of the Week
-			if(auto_week_skip_vector[(currDate.WeekDay == 1) ? 6:currDate.WeekDay-2] == 1){ //One day before
-				reset_day = currDate.WeekDay;
-				week_reset_flag = 1;
-				for(int x = 0; x <7; x ++){
-					auto_week_skip_vector[x] = 1;
-				}
-			}
-		}
-	}else{
-		if(week_reset_flag){
-			if(currDate.WeekDay == reset_day){
-				week_reset_flag = 0;
-				for(int x = 0; x <7; x ++){
-					auto_week_skip_vector[x] = 0;
-				}
-			}
-		}
-	}
 	//Gun atlandi mi
 	if(auto_week_skip_vector[(currDate.WeekDay)-1] == 0){
 		//Rain or >80 humidity (Just Rained)
-		for(int x = 0; x < adc_line_number; x++){
-			if(auto_avg_temp > auto_limits[0] && auto_avg_airhum < auto_limits[3]){
-				//High
-				if(auto_modes[x][3][(currDate.WeekDay)+1] == 1){
-					//auto_modes[x][3][1]dk timer ya da alarm
-				}
-			}else if(auto_avg_temp > auto_limits[0] && auto_avg_airhum < auto_limits[2]){
-				//Mid
-				if(auto_modes[x][2][(currDate.WeekDay)+1] == 1){
-					//auto_modes[x][2][1]dk timer ya da alarm
-				}
-			}else if(auto_avg_temp > auto_limits[0]){
-				//Low
-				if(auto_modes[x][1][(currDate.WeekDay)+1] == 1){
-					//auto_modes[x][1][1]dk timer ya da alarm
-				}
-			}else if(auto_avg_temp > auto_limits[1]){
-				//Min
-				if(auto_modes[x][1][(currDate.WeekDay)+1] == 1){
-					//auto_modes[x][1][1]dk timer ya da alarm
-				}
+		if(adc_result_dma[4] > 2000 || adc_total_moist_avg > 80){
 
-			}else{
-				//Skip Day
-				auto_week_skip_vector[(currDate.WeekDay)-1] = 1;
+			//Skip Day
+			auto_week_skip_vector[(currDate.WeekDay)-1] = 1;
+
+			//Repeated: Skip Rest of the Week
+			if(auto_week_skip_vector[(currDate.WeekDay == 1) ? 6:currDate.WeekDay-2] == 1){ //One day before
+				for(int y = currDate.WeekDay +1 ; y < 7; y++){
+					auto_week_skip_vector[y] = 1;
+				}
+			}
+		}else{
+			for(int x = 0; x < adc_line_number; x++){
+				if(auto_avg_temp > auto_limits[0] && auto_avg_airhum < auto_limits[3]){
+					//High
+					if(auto_modes[x][3][(currDate.WeekDay)+1] == 1){
+						//auto_modes[x][3][1]dk timer ya da alarm
+					}
+				}else if(auto_avg_temp > auto_limits[0]){
+					//Mid
+					if(auto_modes[x][2][(currDate.WeekDay)+1] == 1){
+						//auto_modes[x][2][1]dk timer ya da alarm
+					}
+				}else if(auto_avg_temp > auto_limits[1] && auto_avg_airhum > auto_limits[3]){
+					//Low
+					if(auto_modes[x][1][(currDate.WeekDay)+1] == 1){
+						//auto_modes[x][1][1]dk timer ya da alarm
+					}
+				}else{
+					//Skip Day
+					auto_week_skip_vector[(currDate.WeekDay)-1] = 1;
+				}
 			}
 		}
 	}

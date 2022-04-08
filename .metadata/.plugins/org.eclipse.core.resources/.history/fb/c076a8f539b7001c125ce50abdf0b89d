@@ -107,9 +107,6 @@ int auto_avg_airhum = 0;
 
 int auto_week_skip_vector[7] = {0,0,0,0,0,0,0};
 
-int week_reset_flag = 0;
-int reset_day = 0;
-
 /* Real Time Clock */
 RTC_TimeTypeDef currTime = {0};
 RTC_DateTypeDef currDate = {0};
@@ -858,10 +855,7 @@ void mode_auto(int start){
 			//Repeated: Skip Rest of the Week
 			if(auto_week_skip_vector[(currDate.WeekDay == 1) ? 6:currDate.WeekDay-2] == 1){ //One day before
 				reset_day = currDate.WeekDay;
-				week_reset_flag = 1;
-				for(int x = 0; x <7; x ++){
-					auto_week_skip_vector[x] = 1;
-				}
+				//CEMIN OZEL TARIFI
 			}
 		}
 	}else{
@@ -877,31 +871,32 @@ void mode_auto(int start){
 	//Gun atlandi mi
 	if(auto_week_skip_vector[(currDate.WeekDay)-1] == 0){
 		//Rain or >80 humidity (Just Rained)
-		for(int x = 0; x < adc_line_number; x++){
-			if(auto_avg_temp > auto_limits[0] && auto_avg_airhum < auto_limits[3]){
-				//High
-				if(auto_modes[x][3][(currDate.WeekDay)+1] == 1){
-					//auto_modes[x][3][1]dk timer ya da alarm
-				}
-			}else if(auto_avg_temp > auto_limits[0] && auto_avg_airhum < auto_limits[2]){
-				//Mid
-				if(auto_modes[x][2][(currDate.WeekDay)+1] == 1){
-					//auto_modes[x][2][1]dk timer ya da alarm
-				}
-			}else if(auto_avg_temp > auto_limits[0]){
-				//Low
-				if(auto_modes[x][1][(currDate.WeekDay)+1] == 1){
-					//auto_modes[x][1][1]dk timer ya da alarm
-				}
-			}else if(auto_avg_temp > auto_limits[1]){
-				//Min
-				if(auto_modes[x][1][(currDate.WeekDay)+1] == 1){
-					//auto_modes[x][1][1]dk timer ya da alarm
-				}
+			for(int x = 0; x < adc_line_number; x++){
+				if(auto_avg_temp > auto_limits[0] && auto_avg_airhum < auto_limits[3]){
+					//High
+					if(auto_modes[x][3][(currDate.WeekDay)+1] == 1){
+						//auto_modes[x][3][1]dk timer ya da alarm
+					}
+				}else if(auto_avg_temp > auto_limits[0] && auto_avg_airhum < auto_limits[2]){
+					//Mid
+					if(auto_modes[x][2][(currDate.WeekDay)+1] == 1){
+						//auto_modes[x][2][1]dk timer ya da alarm
+					}
+				}else if(auto_avg_temp > auto_limits[0]){
+					//Low
+					if(auto_modes[x][1][(currDate.WeekDay)+1] == 1){
+						//auto_modes[x][1][1]dk timer ya da alarm
+					}
+				}else if(auto_avg_temp > auto_limits[1]){
+					//Min
+					if(auto_modes[x][1][(currDate.WeekDay)+1] == 1){
+						//auto_modes[x][1][1]dk timer ya da alarm
+					}
 
-			}else{
-				//Skip Day
-				auto_week_skip_vector[(currDate.WeekDay)-1] = 1;
+				}else{
+					//Skip Day
+					auto_week_skip_vector[(currDate.WeekDay)-1] = 1;
+				}
 			}
 		}
 	}
