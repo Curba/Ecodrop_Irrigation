@@ -1,6 +1,19 @@
-23:09:36 **** Incremental Build of configuration Debug for project ed_v1.0 ****
+00:56:39 **** Incremental Build of configuration Debug for project ed_v1.0 ****
 make -j16 all 
 arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F401xC -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'HAL_RTC_AlarmAEventCallback':
+../Core/Src/main.c:754:26: warning: passing argument 1 of 'HAL_RTC_SetAlarm_IT' from incompatible pointer type [-Wincompatible-pointer-types]
+  754 |  if (HAL_RTC_SetAlarm_IT(&hrtc, &sAlarmA, RTC_FORMAT_BCD) != HAL_OK)
+      |                          ^~~~~
+      |                          |
+      |                          RTC_HandleTypeDef ** {aka struct <anonymous> **}
+In file included from ../Core/Inc/stm32f4xx_hal_conf.h:386,
+                 from ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:21:
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rtc.h:717:58: note: expected 'RTC_HandleTypeDef *' {aka 'struct <anonymous> *'} but argument is of type 'RTC_HandleTypeDef **' {aka 'struct <anonymous> **'}
+  717 | HAL_StatusTypeDef HAL_RTC_SetAlarm_IT(RTC_HandleTypeDef *hrtc, RTC_AlarmTypeDef *sAlarm, uint32_t Format);
+      |                                       ~~~~~~~~~~~~~~~~~~~^~~~
 arm-none-eabi-gcc -o "ed_v1.0.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\STM32F401CCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="ed_v1.0.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: ed_v1.0.elf
  
@@ -8,13 +21,13 @@ arm-none-eabi-objdump -h -S  ed_v1.0.elf  > "ed_v1.0.list"
 arm-none-eabi-objcopy  -O binary  ed_v1.0.elf  "ed_v1.0.bin"
 arm-none-eabi-size   ed_v1.0.elf 
    text	   data	    bss	    dec	    hex	filename
-  25764	    120	   2168	  28052	   6d94	ed_v1.0.elf
+  23748	    120	   2200	  26068	   65d4	ed_v1.0.elf
 Finished building: default.size.stdout
-Finished building: ed_v1.0.bin
  
+Finished building: ed_v1.0.bin
  
 Finished building: ed_v1.0.list
  
 
-23:09:37 Build Finished. 0 errors, 0 warnings. (took 1s.319ms)
+00:56:40 Build Finished. 0 errors, 1 warnings. (took 1s.53ms)
 

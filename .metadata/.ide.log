@@ -5098,3 +5098,51 @@
 
 
 2022-04-08 21:25:59,353 [INFO] Activator:171 - !SESSION log4j initialized
+2022-04-08 21:26:34,175 [INFO] RetryExec:97 - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://dl.bintray.com:80: The target server failed to respond
+2022-04-08 21:26:34,177 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
+2022-04-08 21:26:34,354 [INFO] RetryExec:97 - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://dl.bintray.com:80: The target server failed to respond
+2022-04-08 21:26:34,354 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
+2022-04-08 21:26:34,514 [INFO] RetryExec:97 - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://dl.bintray.com:80: The target server failed to respond
+2022-04-08 21:26:34,514 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
+2022-04-08 21:26:35,010 [INFO] RetryExec:97 - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://dl.bintray.com:80: The target server failed to respond
+2022-04-08 21:26:35,011 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
+2022-04-08 21:26:35,171 [INFO] RetryExec:97 - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://dl.bintray.com:80: The target server failed to respond
+2022-04-08 21:26:35,171 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
+2022-04-08 21:26:35,311 [INFO] RetryExec:97 - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://dl.bintray.com:80: The target server failed to respond
+2022-04-08 21:26:35,311 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
+2022-04-08 21:26:35,632 [INFO] RetryExec:97 - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://dl.bintray.com:80: The target server failed to respond
+2022-04-08 21:26:35,633 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
+2022-04-08 21:26:35,785 [INFO] RetryExec:97 - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://dl.bintray.com:80: The target server failed to respond
+2022-04-08 21:26:35,785 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
+2022-04-08 21:26:35,923 [INFO] RetryExec:97 - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://dl.bintray.com:80: The target server failed to respond
+2022-04-08 21:26:35,923 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
+2022-04-08 21:26:36,229 [INFO] RetryExec:97 - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://dl.bintray.com:80: The target server failed to respond
+2022-04-08 21:26:36,229 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
+2022-04-08 21:26:36,365 [INFO] RetryExec:97 - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://dl.bintray.com:80: The target server failed to respond
+2022-04-08 21:26:36,366 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
+2022-04-08 21:26:36,502 [INFO] RetryExec:97 - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://dl.bintray.com:80: The target server failed to respond
+2022-04-08 21:26:36,502 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
+2022-04-08 21:27:14,324 [INFO] RetryExec:97 - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://dl.bintray.com:80: The target server failed to respond
+2022-04-08 21:27:14,324 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
+2022-04-08 21:27:14,456 [INFO] RetryExec:97 - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://dl.bintray.com:80: The target server failed to respond
+2022-04-08 21:27:14,456 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
+2022-04-08 21:27:14,614 [INFO] RetryExec:97 - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://dl.bintray.com:80: The target server failed to respond
+2022-04-08 21:27:14,614 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
+2022-04-08 21:27:15,094 [INFO] RetryExec:97 - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://dl.bintray.com:80: The target server failed to respond
+2022-04-08 21:27:15,095 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
+2022-04-08 21:27:15,237 [INFO] RetryExec:97 - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://dl.bintray.com:80: The target server failed to respond
+2022-04-08 21:27:15,238 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
+2022-04-08 21:27:15,387 [INFO] RetryExec:97 - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://dl.bintray.com:80: The target server failed to respond
+2022-04-08 21:27:15,388 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
+2022-04-08 21:27:15,671 [INFO] RetryExec:97 - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://dl.bintray.com:80: The target server failed to respond
+2022-04-08 21:27:15,671 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
+2022-04-08 21:27:15,835 [INFO] RetryExec:97 - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://dl.bintray.com:80: The target server failed to respond
+2022-04-08 21:27:15,835 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
+2022-04-08 21:27:15,977 [INFO] RetryExec:97 - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://dl.bintray.com:80: The target server failed to respond
+2022-04-08 21:27:15,978 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
+2022-04-08 21:27:16,254 [INFO] RetryExec:97 - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://dl.bintray.com:80: The target server failed to respond
+2022-04-08 21:27:16,255 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
+2022-04-08 21:27:16,407 [INFO] RetryExec:97 - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://dl.bintray.com:80: The target server failed to respond
+2022-04-08 21:27:16,407 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
+2022-04-08 21:27:16,546 [INFO] RetryExec:97 - I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://dl.bintray.com:80: The target server failed to respond
+2022-04-08 21:27:16,547 [INFO] RetryExec:113 - Retrying request to {}->http://dl.bintray.com:80
