@@ -86,11 +86,27 @@ int relay_set[2];
 int relay_end_flag = 0;
 int line_relays[] = {line0_relay_Pin, line1_relay_Pin};
 
+/* Auto Mode Variables */
+//
+int auto_modes[2][3][9] = {{{1,20,0,0,0,1,0,0,0}, {2,30,0,1,0,0,1,0,0}, {2,60,0,1,0,0,1,0,0}},
+							{{1,30,0,0,0,1,0,0,0}, {3,60,0,1,0,1,0,1,0}, {3,120,0,1,0,1,0,1,0}}};
+
+// 0:Sapling | 1:Tree
+int auto_irrigation_time[2];
+
+/*	Index = 0:Sapling | 1:Tree
+	Value = 0:Low | 1:Mid | 2:High */
+int auto_mode_param[2];
+
 
 /* Real Time Clock */
 RTC_TimeTypeDef currTime = {0};
-RTC_TimeTypeDef currDate = {0};
+RTC_DateTypeDef currDate = {0};
 char timeBuff[20];
+char dateBuff[20];
+int set_hours = 0; 		int set_minutes = 0; int set_seconds = 0;
+int set_weekday = 0;  	int set_month = 0;   int set_date = 0;
+int set_year = 0;
 
 
 /* DHT Temp Sensor Variables */
@@ -140,8 +156,11 @@ uint8_t DHT11_Check_Response (void);
 uint8_t DHT11_Read (void);
 void Set_Pin_Input (GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin);
 void Set_Pin_Output (GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin);
+void DHT11_get_value();
 
-
+//RTC PROTOTYPES
+void set_time (int set_hours, int set_minutes, int set_seconds, int set_weekday, int set_month, int set_date, int set_year);
+void get_time();
 
 /* USER CODE END PFP */
 
@@ -191,7 +210,7 @@ int main(void)
 		  adc_line_avg[x] = 0;
 			}
 
-  HAL_RTCEx_SetSmoothCalib(&hrtc, RTC_SMOOTHCALIB_PERIOD_32SEC, RTC_SMOOTHCALIB_PLUSPULSES_RESET, 83883);
+  HAL_RTCEx_SetSmoothCalib(&hrtc, RTC_SMOOTHCALIB_PERIOD_32SEC, RTC_SMOOTHCALIB_PLUSPULSES_RESET, -511);
   HAL_TIM_Base_Start(&htim1);
   lcd_initial_message();
 
@@ -209,41 +228,35 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  	  DHT11_Start();
-	  	  Presence = DHT11_Check_Response();
-	  	  Rh_byte1 = DHT11_Read ();
-	  	  Rh_byte2 = DHT11_Read ();
-	  	  Temp_byte1 = DHT11_Read ();
-	  	  Temp_byte2 = DHT11_Read ();
-	  	  SUM = DHT11_Read();
+	  DHT11_Start();
+	  	Presence = DHT11_Check_Response();
+	  	Rh_byte1 = DHT11_Read ();
+	  	Rh_byte2 = DHT11_Read ();
+	  	Temp_byte1 = DHT11_Read ();
+	  	Temp_byte2 = DHT11_Read ();
+	  	SUM = DHT11_Read();
+	  	TEMP = Temp_byte1;
+	  	RH = Rh_byte1;
 
-	  	  TEMP = Temp_byte1;
-	  	  RH = Rh_byte1;
+	  	Temperature = (float) TEMP;
+	  	Humidity = (float) RH;
 
-	  	  Temperature = (float) TEMP;
-	  	  Humidity = (float) RH;
-
-	  	  	  Temperature = (float) TEMP;
-	  	  	  Humidity = (float) RH;
-
+	  //DHT11_get_value();
+	  get_time();
 
 	  	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_result_dma, adc_channel_lenght);
 	  //mode_planner(0,1);
-
-	 // mode_manual(mode_manual_start);
+	  //mode_manual(mode_manual_start);
 	  menu_func(menu_lcd_refresh, 0);
-	  HAL_Delay(1000);
-	  ///HAL_Delay(2000);
+	  delay_us(100);
+
 
 	  /*
-      HAL_RTC_GetTime(&hrtc, &currTime, RTC_FORMAT_BIN);
-      HAL_RTC_GetDate(&hrtc, &currDate, RTC_FORMAT_BIN);
-      sprintf(timeBuff,"%d,%d.%d", currTime.Hours, currTime.Minutes, currTime.Seconds);
+
       //lcd_clear ();
       lcd_send_string(timeBuff);
       lcd_put_cur(1, 0);
       lcd_send_string("");
-      HAL_Delay(550);
       //lcd_clear ();
 	*/
 
@@ -755,6 +768,20 @@ uint8_t DHT11_Read (void)
 	return i;
 }
 
+void DHT11_get_value(){
+	DHT11_Start();
+	Presence = DHT11_Check_Response();
+	Rh_byte1 = DHT11_Read ();
+	Rh_byte2 = DHT11_Read ();
+	Temp_byte1 = DHT11_Read ();
+	Temp_byte2 = DHT11_Read ();
+	SUM = DHT11_Read();
+	TEMP = Temp_byte1;
+	RH = Rh_byte1;
+	Temperature = (float) TEMP;
+	Humidity = (float) RH;
+}
+
 /*-----------------DHT11 END----------------------------*/
 
 /*-----------------MODE FUNCTIONS BEGIN-----------------*/
@@ -800,11 +827,51 @@ void mode_planner(int auto_mode_flag, int start){
 }
 
 void mode_auto(int start){
+	//Saat geldi mi
+		//yagisli mi ya da genel toprak nemi >80
+
+			//evet: her modu ertesi gune aktar
+				//bu hafta 2. kez yagisliysa sulama yapma bu hafta
+
+			//hayir:
+				//sapling
+					//hafta ortalamalari hangi moda denk geliyor
+						//o modun sulama gunu bugun mu
+							//evet: moda gore sula
+							///hayir: skip
+				//agac
+					//hafta ortalamalari hangi moda denk geliyor
+						//o modun sulama gunu bugun mu
+							//evet: moda gore sula
+							//hayir: skip
 
 }
 
 /*-----------------MODE FUNCTIONS END-----------------*/
 
+void set_time (int set_hours, int set_minutes, int set_seconds, int set_weekday, int set_month, int set_date, int set_year){
+  RTC_TimeTypeDef sTime;
+  RTC_DateTypeDef sDate;
+  sTime.Hours = set_hours; // set hours
+  sTime.Minutes = set_minutes; // set minutes
+  sTime.Seconds = set_seconds; // set seconds
+  sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+  sTime.StoreOperation = RTC_STOREOPERATION_RESET;
+  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK){}
+  sDate.WeekDay = set_weekday;
+  sDate.Month = set_month;
+  sDate.Date = set_date;
+  sDate.Year = set_year;
+  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD) != HAL_OK){}
+  HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR1, 0x32F2); // backup register
+}
+
+void get_time(){
+	HAL_RTC_GetTime(&hrtc, &currTime, RTC_FORMAT_BIN);
+	HAL_RTC_GetDate(&hrtc, &currDate, RTC_FORMAT_BIN);
+	sprintf(timeBuff,"%d,%d.%d", currTime.Hours, currTime.Minutes, currTime.Seconds);
+	sprintf(dateBuff,"%02d-%02d-%2d",currDate.Date, currDate.Month, 2000 + currDate.Year);
+}
 
 /*-----------------MENU BEGIN-------------------------*/
 void lcd_initial_message(){
