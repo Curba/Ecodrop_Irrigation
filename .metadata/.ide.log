@@ -4874,3 +4874,199 @@
 2022-04-08 03:06:46,858 [INFO] ProjectBuilder:3584 - Time for Generating toolchain IDE Files: 2127mS.
 2022-04-08 03:06:46,859 [INFO] ProjectBuilder:2339 - Time for Copy CMSIS : 1mS.
 2022-04-08 03:06:46,862 [INFO] ProjectBuilder:2339 - Time for Copy CMSIS : 0mS.
+2022-04-08 03:53:10,693 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 850735616 Bytes (1059061760)
+2022-04-08 03:53:11,619 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 719898360 Bytes (1059061760)
+2022-04-08 03:53:12,209 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 682735936 Bytes (1059061760)
+2022-04-08 03:53:12,555 [INFO] BlockDiagram:2735 - set Specific Code input for plugin: RTC
+2022-04-08 03:53:12,555 [INFO] BlockDiagram:2735 - set Specific Code input for plugin: NVIC
+2022-04-08 03:53:12,555 [INFO] BlockDiagram:2735 - set Specific Code input for plugin: DMA
+2022-04-08 03:53:12,556 [INFO] BlockDiagram:2735 - set Specific Code input for plugin: TIM1_8
+2022-04-08 03:53:12,556 [INFO] BlockDiagram:2735 - set Specific Code input for plugin: SYS
+2022-04-08 03:53:12,556 [INFO] BlockDiagram:2735 - set Specific Code input for plugin: GPIO
+2022-04-08 03:53:12,556 [INFO] BlockDiagram:2735 - set Specific Code input for plugin: ADC
+2022-04-08 03:53:12,556 [INFO] BlockDiagram:2735 - set Specific Code input for plugin: RCC
+2022-04-08 03:53:12,556 [INFO] BlockDiagram:2735 - set Specific Code input for plugin: I2C
+2022-04-08 03:53:12,597 [INFO] CodeGenerator:641 - code generatio: config db path: C:\ST\STM32CubeIDE_1.6.1\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.2.1.202103241236\\db\
+2022-04-08 03:53:12,615 [INFO] Argument:278 - Argument : hdmavalue: null
+2022-04-08 03:53:12,616 [INFO] Argument:280 - 	 sub Args: 
+2022-04-08 03:53:12,616 [INFO] Argument:278 - Argument : Instancevalue: DMA2_Stream0
+2022-04-08 03:53:12,616 [INFO] Argument:288 - Argument : Instancevalue: DMA2_Stream0
+2022-04-08 03:53:12,616 [INFO] Argument:278 - Argument : Initvalue: null
+2022-04-08 03:53:12,616 [INFO] Argument:280 - 	 sub Args: 
+2022-04-08 03:53:12,616 [INFO] Argument:278 - Argument : Channelvalue: DMA_CHANNEL_0
+2022-04-08 03:53:12,616 [INFO] Argument:288 - Argument : Channelvalue: DMA_CHANNEL_0
+2022-04-08 03:53:12,616 [INFO] Argument:278 - Argument : Directionvalue: DMA_PERIPH_TO_MEMORY
+2022-04-08 03:53:12,616 [INFO] Argument:288 - Argument : Directionvalue: DMA_PERIPH_TO_MEMORY
+2022-04-08 03:53:12,616 [INFO] Argument:278 - Argument : PeriphIncvalue: DMA_PINC_DISABLE
+2022-04-08 03:53:12,616 [INFO] Argument:288 - Argument : PeriphIncvalue: DMA_PINC_DISABLE
+2022-04-08 03:53:12,616 [INFO] Argument:278 - Argument : MemIncvalue: DMA_MINC_ENABLE
+2022-04-08 03:53:12,617 [INFO] Argument:288 - Argument : MemIncvalue: DMA_MINC_ENABLE
+2022-04-08 03:53:12,617 [INFO] Argument:278 - Argument : PeriphDataAlignmentvalue: DMA_PDATAALIGN_HALFWORD
+2022-04-08 03:53:12,617 [INFO] Argument:288 - Argument : PeriphDataAlignmentvalue: DMA_PDATAALIGN_HALFWORD
+2022-04-08 03:53:12,617 [INFO] Argument:278 - Argument : MemDataAlignmentvalue: DMA_MDATAALIGN_HALFWORD
+2022-04-08 03:53:12,617 [INFO] Argument:288 - Argument : MemDataAlignmentvalue: DMA_MDATAALIGN_HALFWORD
+2022-04-08 03:53:12,617 [INFO] Argument:278 - Argument : Modevalue: DMA_NORMAL
+2022-04-08 03:53:12,617 [INFO] Argument:288 - Argument : Modevalue: DMA_NORMAL
+2022-04-08 03:53:12,617 [INFO] Argument:278 - Argument : Priorityvalue: DMA_PRIORITY_LOW
+2022-04-08 03:53:12,617 [INFO] Argument:288 - Argument : Priorityvalue: DMA_PRIORITY_LOW
+2022-04-08 03:53:12,617 [INFO] Argument:278 - Argument : FIFOModevalue: DMA_FIFOMODE_DISABLE
+2022-04-08 03:53:12,617 [INFO] Argument:288 - Argument : FIFOModevalue: DMA_FIFOMODE_DISABLE
+2022-04-08 03:53:12,617 [INFO] Argument:278 - Argument : FIFOThresholdvalue: null
+2022-04-08 03:53:12,617 [INFO] Argument:288 - Argument : FIFOThresholdvalue: null
+2022-04-08 03:53:12,618 [INFO] Argument:278 - Argument : MemBurstvalue: null
+2022-04-08 03:53:12,618 [INFO] Argument:288 - Argument : MemBurstvalue: null
+2022-04-08 03:53:12,618 [INFO] Argument:278 - Argument : PeriphBurstvalue: null
+2022-04-08 03:53:12,618 [INFO] Argument:288 - Argument : PeriphBurstvalue: null
+2022-04-08 03:53:12,618 [INFO] Argument:278 - Argument : Lockvalue: null
+2022-04-08 03:53:12,618 [INFO] Argument:288 - Argument : Lockvalue: null
+2022-04-08 03:53:12,618 [INFO] Argument:278 - Argument : Statevalue: null
+2022-04-08 03:53:12,618 [INFO] Argument:288 - Argument : Statevalue: null
+2022-04-08 03:53:12,618 [INFO] Argument:278 - Argument : Parentvalue: null
+2022-04-08 03:53:12,618 [INFO] Argument:288 - Argument : Parentvalue: null
+2022-04-08 03:53:12,618 [INFO] Argument:278 - Argument : XferCpltCallbackvalue: null
+2022-04-08 03:53:12,618 [INFO] Argument:288 - Argument : XferCpltCallbackvalue: null
+2022-04-08 03:53:12,618 [INFO] Argument:278 - Argument : XferHalfCpltCallbackvalue: null
+2022-04-08 03:53:12,618 [INFO] Argument:288 - Argument : XferHalfCpltCallbackvalue: null
+2022-04-08 03:53:12,619 [INFO] Argument:278 - Argument : XferM1CpltCallbackvalue: null
+2022-04-08 03:53:12,619 [INFO] Argument:288 - Argument : XferM1CpltCallbackvalue: null
+2022-04-08 03:53:12,619 [INFO] Argument:278 - Argument : XferErrorCallbackvalue: null
+2022-04-08 03:53:12,619 [INFO] Argument:288 - Argument : XferErrorCallbackvalue: null
+2022-04-08 03:53:12,619 [INFO] Argument:278 - Argument : ErrorCodevalue: null
+2022-04-08 03:53:12,619 [INFO] Argument:288 - Argument : ErrorCodevalue: null
+2022-04-08 03:53:12,621 [WARN] IP:2088 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2022-04-08 03:53:12,622 [WARN] IP:2088 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2022-04-08 03:53:12,911 [INFO] CodeEngine:229 - oldGeneratedFile, C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\MXTmpFiles\license.tmp_save
+2022-04-08 03:53:12,994 [INFO] CodeEngine:247 - Generated code: C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\MXTmpFiles\license.tmp
+2022-04-08 03:53:13,039 [INFO] CodeEngine:229 - oldGeneratedFile, C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\MXTmpFiles\gpio.tmp_save
+2022-04-08 03:53:13,097 [INFO] CodeEngine:247 - Generated code: C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\MXTmpFiles\gpio.tmp
+2022-04-08 03:53:13,437 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line
+2022-04-08 03:53:13,439 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line
+2022-04-08 03:53:13,457 [INFO] CodeEngine:229 - oldGeneratedFile, C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\MXTmpFiles\dma.tmp_save
+2022-04-08 03:53:13,522 [INFO] CodeEngine:247 - Generated code: C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\MXTmpFiles\dma.tmp
+2022-04-08 03:53:13,525 [INFO] CodeEngine:229 - oldGeneratedFile, C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\MXTmpFiles\dma_GV.tmp_save
+2022-04-08 03:53:13,576 [INFO] CodeEngine:247 - Generated code: C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\MXTmpFiles\dma_GV.tmp
+2022-04-08 03:53:13,578 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line
+2022-04-08 03:53:13,581 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line
+2022-04-08 03:53:13,582 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line
+2022-04-08 03:53:13,595 [INFO] CodeEngine:229 - oldGeneratedFile, C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\Core\Src\stm32f4xx_it.c_save
+2022-04-08 03:53:13,687 [INFO] CodeEngine:247 - Generated code: C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\Core\Src\stm32f4xx_it.c
+2022-04-08 03:53:13,702 [INFO] CodeEngine:229 - oldGeneratedFile, C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\Core\Inc\stm32f4xx_it.h_save
+2022-04-08 03:53:13,759 [INFO] CodeEngine:247 - Generated code: C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\Core\Inc\stm32f4xx_it.h
+2022-04-08 03:53:13,770 [INFO] CodeEngine:229 - oldGeneratedFile, C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\Core\Src\stm32f4xx_hal_msp.c_save
+2022-04-08 03:53:13,876 [INFO] CodeEngine:247 - Generated code: C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\Core\Src\stm32f4xx_hal_msp.c
+2022-04-08 03:53:13,879 [INFO] CodeEngine:229 - oldGeneratedFile, C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\MXTmpFiles\system.tmp_save
+2022-04-08 03:53:13,923 [INFO] CodeEngine:247 - Generated code: C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\MXTmpFiles\system.tmp
+2022-04-08 03:53:13,932 [INFO] CodeEngine:229 - oldGeneratedFile, C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\Core\Inc\stm32f4xx_hal_conf.h_save
+2022-04-08 03:53:14,000 [INFO] CodeEngine:247 - Generated code: C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\Core\Inc\stm32f4xx_hal_conf.h
+2022-04-08 03:53:14,028 [WARN] IPConfigManager:2976 - IP not found : TIM
+2022-04-08 03:53:14,029 [WARN] CodeGenerator:3191 - IP not found : null
+2022-04-08 03:53:14,036 [INFO] CodeEngine:229 - oldGeneratedFile, C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\Core\Inc\main.h_save
+2022-04-08 03:53:14,092 [INFO] CodeEngine:247 - Generated code: C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\Core\Inc\main.h
+2022-04-08 03:53:14,097 [INFO] CodeEngine:229 - oldGeneratedFile, C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\Core\Src\main.c_save
+2022-04-08 03:53:14,240 [INFO] CodeEngine:247 - Generated code: C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\Core\Src\main.c
+2022-04-08 03:53:14,924 [INFO] ProjectBuilder:2460 - Time for Copy HAL[1] : 131mS.
+2022-04-08 03:53:14,929 [INFO] ProjectBuilder:3418 - Project Generator version: 3.13.0-B3
+2022-04-08 03:53:15,349 [INFO] ConfigFileManager:1242 - The Die is : DIE423
+2022-04-08 03:53:16,978 [INFO] ProjectBuilder:3584 - Time for Generating toolchain IDE Files: 2049mS.
+2022-04-08 03:53:16,979 [INFO] ProjectBuilder:2339 - Time for Copy CMSIS : 1mS.
+2022-04-08 03:53:16,981 [INFO] ProjectBuilder:2339 - Time for Copy CMSIS : 0mS.
+2022-04-08 04:20:48,646 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 753029024 Bytes (1064304640)
+2022-04-08 04:20:49,751 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 773231848 Bytes (1064304640)
+2022-04-08 04:20:51,704 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 770516024 Bytes (1064304640)
+2022-04-08 04:20:51,996 [INFO] BlockDiagram:2735 - set Specific Code input for plugin: RTC
+2022-04-08 04:20:51,997 [INFO] BlockDiagram:2735 - set Specific Code input for plugin: NVIC
+2022-04-08 04:20:51,997 [INFO] BlockDiagram:2735 - set Specific Code input for plugin: DMA
+2022-04-08 04:20:51,997 [INFO] BlockDiagram:2735 - set Specific Code input for plugin: TIM1_8
+2022-04-08 04:20:51,997 [INFO] BlockDiagram:2735 - set Specific Code input for plugin: SYS
+2022-04-08 04:20:51,997 [INFO] BlockDiagram:2735 - set Specific Code input for plugin: GPIO
+2022-04-08 04:20:51,997 [INFO] BlockDiagram:2735 - set Specific Code input for plugin: ADC
+2022-04-08 04:20:51,997 [INFO] BlockDiagram:2735 - set Specific Code input for plugin: RCC
+2022-04-08 04:20:51,998 [INFO] BlockDiagram:2735 - set Specific Code input for plugin: I2C
+2022-04-08 04:20:51,998 [INFO] CodeGenerator:641 - code generatio: config db path: C:\ST\STM32CubeIDE_1.6.1\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.2.1.202103241236\\db\
+2022-04-08 04:20:52,032 [INFO] Argument:278 - Argument : hdmavalue: null
+2022-04-08 04:20:52,032 [INFO] Argument:280 - 	 sub Args: 
+2022-04-08 04:20:52,032 [INFO] Argument:278 - Argument : Instancevalue: DMA2_Stream0
+2022-04-08 04:20:52,032 [INFO] Argument:288 - Argument : Instancevalue: DMA2_Stream0
+2022-04-08 04:20:52,033 [INFO] Argument:278 - Argument : Initvalue: null
+2022-04-08 04:20:52,033 [INFO] Argument:280 - 	 sub Args: 
+2022-04-08 04:20:52,033 [INFO] Argument:278 - Argument : Channelvalue: DMA_CHANNEL_0
+2022-04-08 04:20:52,033 [INFO] Argument:288 - Argument : Channelvalue: DMA_CHANNEL_0
+2022-04-08 04:20:52,033 [INFO] Argument:278 - Argument : Directionvalue: DMA_PERIPH_TO_MEMORY
+2022-04-08 04:20:52,033 [INFO] Argument:288 - Argument : Directionvalue: DMA_PERIPH_TO_MEMORY
+2022-04-08 04:20:52,033 [INFO] Argument:278 - Argument : PeriphIncvalue: DMA_PINC_DISABLE
+2022-04-08 04:20:52,033 [INFO] Argument:288 - Argument : PeriphIncvalue: DMA_PINC_DISABLE
+2022-04-08 04:20:52,033 [INFO] Argument:278 - Argument : MemIncvalue: DMA_MINC_ENABLE
+2022-04-08 04:20:52,033 [INFO] Argument:288 - Argument : MemIncvalue: DMA_MINC_ENABLE
+2022-04-08 04:20:52,033 [INFO] Argument:278 - Argument : PeriphDataAlignmentvalue: DMA_PDATAALIGN_HALFWORD
+2022-04-08 04:20:52,033 [INFO] Argument:288 - Argument : PeriphDataAlignmentvalue: DMA_PDATAALIGN_HALFWORD
+2022-04-08 04:20:52,033 [INFO] Argument:278 - Argument : MemDataAlignmentvalue: DMA_MDATAALIGN_HALFWORD
+2022-04-08 04:20:52,033 [INFO] Argument:288 - Argument : MemDataAlignmentvalue: DMA_MDATAALIGN_HALFWORD
+2022-04-08 04:20:52,034 [INFO] Argument:278 - Argument : Modevalue: DMA_NORMAL
+2022-04-08 04:20:52,034 [INFO] Argument:288 - Argument : Modevalue: DMA_NORMAL
+2022-04-08 04:20:52,034 [INFO] Argument:278 - Argument : Priorityvalue: DMA_PRIORITY_LOW
+2022-04-08 04:20:52,034 [INFO] Argument:288 - Argument : Priorityvalue: DMA_PRIORITY_LOW
+2022-04-08 04:20:52,034 [INFO] Argument:278 - Argument : FIFOModevalue: DMA_FIFOMODE_DISABLE
+2022-04-08 04:20:52,034 [INFO] Argument:288 - Argument : FIFOModevalue: DMA_FIFOMODE_DISABLE
+2022-04-08 04:20:52,034 [INFO] Argument:278 - Argument : FIFOThresholdvalue: null
+2022-04-08 04:20:52,034 [INFO] Argument:288 - Argument : FIFOThresholdvalue: null
+2022-04-08 04:20:52,034 [INFO] Argument:278 - Argument : MemBurstvalue: null
+2022-04-08 04:20:52,034 [INFO] Argument:288 - Argument : MemBurstvalue: null
+2022-04-08 04:20:52,034 [INFO] Argument:278 - Argument : PeriphBurstvalue: null
+2022-04-08 04:20:52,034 [INFO] Argument:288 - Argument : PeriphBurstvalue: null
+2022-04-08 04:20:52,034 [INFO] Argument:278 - Argument : Lockvalue: null
+2022-04-08 04:20:52,035 [INFO] Argument:288 - Argument : Lockvalue: null
+2022-04-08 04:20:52,035 [INFO] Argument:278 - Argument : Statevalue: null
+2022-04-08 04:20:52,035 [INFO] Argument:288 - Argument : Statevalue: null
+2022-04-08 04:20:52,035 [INFO] Argument:278 - Argument : Parentvalue: null
+2022-04-08 04:20:52,035 [INFO] Argument:288 - Argument : Parentvalue: null
+2022-04-08 04:20:52,035 [INFO] Argument:278 - Argument : XferCpltCallbackvalue: null
+2022-04-08 04:20:52,035 [INFO] Argument:288 - Argument : XferCpltCallbackvalue: null
+2022-04-08 04:20:52,035 [INFO] Argument:278 - Argument : XferHalfCpltCallbackvalue: null
+2022-04-08 04:20:52,035 [INFO] Argument:288 - Argument : XferHalfCpltCallbackvalue: null
+2022-04-08 04:20:52,035 [INFO] Argument:278 - Argument : XferM1CpltCallbackvalue: null
+2022-04-08 04:20:52,035 [INFO] Argument:288 - Argument : XferM1CpltCallbackvalue: null
+2022-04-08 04:20:52,035 [INFO] Argument:278 - Argument : XferErrorCallbackvalue: null
+2022-04-08 04:20:52,035 [INFO] Argument:288 - Argument : XferErrorCallbackvalue: null
+2022-04-08 04:20:52,036 [INFO] Argument:278 - Argument : ErrorCodevalue: null
+2022-04-08 04:20:52,036 [INFO] Argument:288 - Argument : ErrorCodevalue: null
+2022-04-08 04:20:52,038 [WARN] IP:2088 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2022-04-08 04:20:52,039 [WARN] IP:2088 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2022-04-08 04:20:52,360 [INFO] CodeEngine:229 - oldGeneratedFile, C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\MXTmpFiles\license.tmp_save
+2022-04-08 04:20:52,450 [INFO] CodeEngine:247 - Generated code: C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\MXTmpFiles\license.tmp
+2022-04-08 04:20:52,510 [INFO] CodeEngine:229 - oldGeneratedFile, C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\MXTmpFiles\gpio.tmp_save
+2022-04-08 04:20:52,568 [INFO] CodeEngine:247 - Generated code: C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\MXTmpFiles\gpio.tmp
+2022-04-08 04:20:52,879 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line
+2022-04-08 04:20:52,881 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line
+2022-04-08 04:20:52,930 [INFO] CodeEngine:229 - oldGeneratedFile, C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\MXTmpFiles\dma.tmp_save
+2022-04-08 04:20:52,979 [INFO] CodeEngine:247 - Generated code: C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\MXTmpFiles\dma.tmp
+2022-04-08 04:20:52,982 [INFO] CodeEngine:229 - oldGeneratedFile, C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\MXTmpFiles\dma_GV.tmp_save
+2022-04-08 04:20:53,027 [INFO] CodeEngine:247 - Generated code: C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\MXTmpFiles\dma_GV.tmp
+2022-04-08 04:20:53,029 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line
+2022-04-08 04:20:53,031 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line
+2022-04-08 04:20:53,032 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line
+2022-04-08 04:20:53,045 [INFO] CodeEngine:229 - oldGeneratedFile, C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\Core\Src\stm32f4xx_it.c_save
+2022-04-08 04:20:53,142 [INFO] CodeEngine:247 - Generated code: C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\Core\Src\stm32f4xx_it.c
+2022-04-08 04:20:53,147 [INFO] CodeEngine:229 - oldGeneratedFile, C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\Core\Inc\stm32f4xx_it.h_save
+2022-04-08 04:20:53,202 [INFO] CodeEngine:247 - Generated code: C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\Core\Inc\stm32f4xx_it.h
+2022-04-08 04:20:53,213 [INFO] CodeEngine:229 - oldGeneratedFile, C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\Core\Src\stm32f4xx_hal_msp.c_save
+2022-04-08 04:20:53,309 [INFO] CodeEngine:247 - Generated code: C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\Core\Src\stm32f4xx_hal_msp.c
+2022-04-08 04:20:53,313 [INFO] CodeEngine:229 - oldGeneratedFile, C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\MXTmpFiles\system.tmp_save
+2022-04-08 04:20:53,408 [INFO] CodeEngine:247 - Generated code: C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\MXTmpFiles\system.tmp
+2022-04-08 04:20:53,417 [INFO] CodeEngine:229 - oldGeneratedFile, C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\Core\Inc\stm32f4xx_hal_conf.h_save
+2022-04-08 04:20:53,481 [INFO] CodeEngine:247 - Generated code: C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\Core\Inc\stm32f4xx_hal_conf.h
+2022-04-08 04:20:53,508 [WARN] IPConfigManager:2976 - IP not found : TIM
+2022-04-08 04:20:53,509 [WARN] CodeGenerator:3191 - IP not found : null
+2022-04-08 04:20:53,516 [INFO] CodeEngine:229 - oldGeneratedFile, C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\Core\Inc\main.h_save
+2022-04-08 04:20:53,572 [INFO] CodeEngine:247 - Generated code: C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\Core\Inc\main.h
+2022-04-08 04:20:53,576 [INFO] CodeEngine:229 - oldGeneratedFile, C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\Core\Src\main.c_save
+2022-04-08 04:20:53,720 [INFO] CodeEngine:247 - Generated code: C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\Core\Src\main.c
+2022-04-08 04:20:54,504 [INFO] ProjectBuilder:2460 - Time for Copy HAL[1] : 181mS.
+2022-04-08 04:20:54,508 [INFO] ProjectBuilder:3418 - Project Generator version: 3.13.0-B3
+2022-04-08 04:20:54,922 [INFO] ConfigFileManager:1242 - The Die is : DIE423
+2022-04-08 04:20:56,516 [INFO] ProjectBuilder:3584 - Time for Generating toolchain IDE Files: 2008mS.
+2022-04-08 04:20:56,517 [INFO] ProjectBuilder:2339 - Time for Copy CMSIS : 1mS.
+2022-04-08 04:20:56,520 [INFO] ProjectBuilder:2339 - Time for Copy CMSIS : 0mS.
+2022-04-08 13:10:59,093 [INFO] Activator:170 - 
+
+
+2022-04-08 13:10:59,096 [INFO] Activator:171 - !SESSION log4j initialized
