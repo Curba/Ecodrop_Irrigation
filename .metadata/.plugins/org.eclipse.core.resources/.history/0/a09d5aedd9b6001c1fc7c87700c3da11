@@ -229,7 +229,7 @@ int main(void)
     /* USER CODE BEGIN 3 */
 
 
-	  //DHT11_get_value();
+	  DHT11_get_value();
 	  //get_time();
 
 	  	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_result_dma, adc_channel_lenght);

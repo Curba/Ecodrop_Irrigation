@@ -87,6 +87,7 @@ int relay_end_flag = 0;
 int line_relays[] = {line0_relay_Pin, line1_relay_Pin};
 
 /* Auto Mode Variables */
+//
 int auto_modes[2][3][9] = {{{1,20,0,0,0,1,0,0,0}, {2,30,0,1,0,0,1,0,0}, {2,60,0,1,0,0,1,0,0}},
 							{{1,30,0,0,0,1,0,0,0}, {3,60,0,1,0,1,0,1,0}, {3,120,0,1,0,1,0,1,0}}};
 
@@ -227,7 +228,18 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  DHT11_Start();
+	  	Presence = DHT11_Check_Response();
+	  	Rh_byte1 = DHT11_Read ();
+	  	Rh_byte2 = DHT11_Read ();
+	  	Temp_byte1 = DHT11_Read ();
+	  	Temp_byte2 = DHT11_Read ();
+	  	SUM = DHT11_Read();
+	  	TEMP = Temp_byte1;
+	  	RH = Rh_byte1;
 
+	  	Temperature = (float) TEMP;
+	  	Humidity = (float) RH;
 
 	  //DHT11_get_value();
 	  //get_time();
@@ -660,11 +672,11 @@ void delay_us (uint16_t us)
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 	if(hadc == &hadc1){
 
-		for(int x =0; x<4; x++){
-			adc_result_dma[x] = (adc_result_dma[x]> 2730) ? 2730:adc_result_dma[x];
-			adc_result_dma[x] = (adc_result_dma[x]< 1260) ? 1260:adc_result_dma[x];
+		for(int x =0; x<adc_channel_lenght; x++){
+			//adc_result_dma[x] = (adc_result_dma[x]> 2730) ? 2730:adc_result_dma[x];
+			//adc_result_dma[x] = (adc_result_dma[x]< 1260) ? 1260:adc_result_dma[x];
 			adc_result_percentage[x] = 100-((adc_result_dma[x]-1260)*100/1470);
-		}
+
 			//Produces Line average : adc_line_avg
 			int y =0;
 			int per_line_offset = moist_per_line[0];
@@ -676,7 +688,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 				adc_line_avg[x] /= moist_per_line[x];
 			   per_line_offset += moist_per_line[x+1];
 			}
-
+		}
 	}
 }
 
