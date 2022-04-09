@@ -251,14 +251,14 @@ int main(void)
     /* USER CODE BEGIN 3 */
 
 
-	  DHT11_get_value();
+	  //DHT11_get_value();
 	  get_time();
 
 	  	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_result_dma, adc_channel_lenght);
 	  //mode_planner(0,1);
 	  //mode_manual(mode_manual_start);
 	  //menu_func(menu_lcd_refresh, 0);
-	  HAL_Delay(1000);
+	  HAL_Delay(100);
 /*
 	  	 sTime.Hours += 0x1;
 	    sTime.Minutes = 0x2;
@@ -510,9 +510,9 @@ static void MX_RTC_Init(void)
 
   /** Initialize RTC and set the Time and Date
   */
-  sTime.Hours = 0x1;
-  sTime.Minutes = 0x2;
-  sTime.Seconds = 0x0;
+  sTime.Hours = 0x2;
+  sTime.Minutes = 0x5;
+  sTime.Seconds = 0x10;
   sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
   sTime.StoreOperation = RTC_STOREOPERATION_RESET;
   if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
@@ -530,26 +530,17 @@ static void MX_RTC_Init(void)
   }
   /** Enable the Alarm A
   */
-  sAlarm.AlarmTime.Hours = 0x1;
-  sAlarm.AlarmTime.Minutes = 0x3;
-  sAlarm.AlarmTime.Seconds = 0x0;
+  sAlarm.AlarmTime.Hours = 0x2;
+  sAlarm.AlarmTime.Minutes = 0x5;
+  sAlarm.AlarmTime.Seconds = 0x20;
   sAlarm.AlarmTime.SubSeconds = 0x0;
   sAlarm.AlarmTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
   sAlarm.AlarmTime.StoreOperation = RTC_STOREOPERATION_RESET;
   sAlarm.AlarmMask = RTC_ALARMMASK_DATEWEEKDAY;
   sAlarm.AlarmSubSecondMask = RTC_ALARMSUBSECONDMASK_ALL;
   sAlarm.AlarmDateWeekDaySel = RTC_ALARMDATEWEEKDAYSEL_WEEKDAY;
-  sAlarm.AlarmDateWeekDay = RTC_WEEKDAY_FRIDAY;
+  sAlarm.AlarmDateWeekDay = RTC_WEEKDAY_SATURDAY;
   sAlarm.Alarm = RTC_ALARM_A;
-  if (HAL_RTC_SetAlarm_IT(&hrtc, &sAlarm, RTC_FORMAT_BCD) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Enable the Alarm B
-  */
-  sAlarm.AlarmTime.Seconds = 0x20;
-  sAlarm.AlarmDateWeekDay = RTC_WEEKDAY_MONDAY;
-  sAlarm.Alarm = RTC_ALARM_B;
   if (HAL_RTC_SetAlarm_IT(&hrtc, &sAlarm, RTC_FORMAT_BCD) != HAL_OK)
   {
     Error_Handler();
@@ -699,7 +690,6 @@ void delay_us (uint16_t us)
 /*-----------------INTERRUPTS BEGIN-----------------------*/
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 	if(hadc == &hadc1){
-
 		for(int x =0; x<adc_moist_number; x++){
 			adc_result_dma[x] = (adc_result_dma[x]> 2730) ? 2730:adc_result_dma[x];
 			adc_result_dma[x] = (adc_result_dma[x]< 1260) ? 1260:adc_result_dma[x];
@@ -719,8 +709,6 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 			   adc_total_moist_avg += adc_line_avg[x];
 			}
 			adc_total_moist_avg /= adc_line_number;
-
-
 	}
 }
 
@@ -739,29 +727,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
 {
 	menu_click = 1;
-	menu_click = 0;
-	sAlarmA.AlarmTime.Hours = 0x1;
-	sAlarmA.AlarmTime.Minutes = 0x3;
-	sAlarmA.AlarmTime.Seconds = 0x0;
-	sAlarmA.AlarmTime.SubSeconds = 0x0;
-	sAlarmA.AlarmTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
-	sAlarmA.AlarmTime.StoreOperation = RTC_STOREOPERATION_RESET;
-	sAlarmA.AlarmMask = RTC_ALARMMASK_NONE;
-	sAlarmA.AlarmSubSecondMask = RTC_ALARMSUBSECONDMASK_ALL;
-	sAlarmA.AlarmDateWeekDaySel = RTC_ALARMDATEWEEKDAYSEL_WEEKDAY;
-	sAlarmA.AlarmDateWeekDay = RTC_WEEKDAY_FRIDAY;
-	sAlarmA.Alarm = RTC_ALARM_A;
-	if (HAL_RTC_SetAlarm_IT(&hrtc, &sAlarmA, RTC_FORMAT_BCD) != HAL_OK)
-	{
-	Error_Handler();
-	}
+	menu_click = 1;
 }
 
-void HAL_RTC_AlarmBEventCallback(RTC_HandleTypeDef *hrtc)
-{
-	menu_click = 1;
-	menu_click = 0;
-}
 
 /*-----------------INTERRUPTS END-----------------------*/
 
@@ -968,55 +936,6 @@ void mode_auto(int start){
 
 /*-----------------MODE FUNCTIONS END-----------------*/
 
-void set_time (int set_hours, int set_minutes, int set_seconds, int set_weekday, int set_month, int set_date, int set_year){
-  RTC_TimeTypeDef sTime;
-  RTC_DateTypeDef sDate;
-  sTime.Hours = set_hours; // set hours
-  sTime.Minutes = set_minutes; // set minutes
-  sTime.Seconds = set_seconds; // set seconds
-  sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
-  sTime.StoreOperation = RTC_STOREOPERATION_RESET;
-  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK){}
-  sDate.WeekDay = set_weekday;
-  sDate.Month = set_month;
-  sDate.Date = set_date;
-  sDate.Year = set_year;
-  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD) != HAL_OK){}
-  HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR1, 0x32F2); // backup register
-}
-
-void set_alarm(int alarm, int days_hex, int hours_hex, int mins_hex){
-	if(alarm){
-		sAlarmB.AlarmTime.Hours = 0x0;
-		sAlarmB.AlarmTime.Minutes = 0x0;
-		sAlarmB.AlarmTime.Seconds = 0x0;
-		sAlarmB.AlarmTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
-		sAlarmB.AlarmTime.StoreOperation = RTC_STOREOPERATION_RESET;
-		sAlarmB.AlarmMask = RTC_ALARMMASK_DATEWEEKDAY;
-		sAlarmB.AlarmDateWeekDay = RTC_WEEKDAY_MONDAY;
-		sAlarmB.Alarm = RTC_ALARM_B;
-		if (HAL_RTC_SetAlarm_IT(&hrtc, &sAlarmB, RTC_FORMAT_BCD) != HAL_OK)
-		{
-		Error_Handler();
-		}
-	}else{
-		sAlarmA.AlarmTime.Hours = 0x1;
-		sAlarmA.AlarmTime.Minutes = 0x3;
-		sAlarmA.AlarmTime.Seconds = 0x0;
-		sAlarmA.AlarmTime.SubSeconds = 0x0;
-		sAlarmA.AlarmTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
-		sAlarmA.AlarmTime.StoreOperation = RTC_STOREOPERATION_RESET;
-		sAlarmA.AlarmMask = RTC_ALARMMASK_NONE;
-		sAlarmA.AlarmSubSecondMask = RTC_ALARMSUBSECONDMASK_ALL;
-		sAlarmA.AlarmDateWeekDaySel = RTC_ALARMDATEWEEKDAYSEL_WEEKDAY;
-		sAlarmA.AlarmDateWeekDay = RTC_WEEKDAY_FRIDAY;
-		sAlarmA.Alarm = RTC_ALARM_A;
-		if (HAL_RTC_SetAlarm_IT(&hrtc, &sAlarmA, RTC_FORMAT_BCD) != HAL_OK)
-		{
-		Error_Handler();
-		}
-	}
-}
 
 void get_time(){
 	HAL_RTC_GetTime(&hrtc, &currTime, RTC_FORMAT_BIN);
