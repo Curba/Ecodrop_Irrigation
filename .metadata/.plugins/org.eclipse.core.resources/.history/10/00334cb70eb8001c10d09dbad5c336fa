@@ -720,8 +720,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     }else if(GPIO_Pin == button_down_Pin){
     	menu_down = 1;
     }else if(GPIO_Pin == button_press_Pin){
-    	//set_alarm(0, 0, 0, 0);
-    	set_time(0, 0, 0, 0, 0, 0, 0);
+    	set_alarm(0, 0, 0, 0);
     	menu_click = 1;
     }
 }

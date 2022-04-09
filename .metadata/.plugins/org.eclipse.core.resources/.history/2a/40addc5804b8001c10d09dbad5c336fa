@@ -720,8 +720,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     }else if(GPIO_Pin == button_down_Pin){
     	menu_down = 1;
     }else if(GPIO_Pin == button_press_Pin){
-    	//set_alarm(0, 0, 0, 0);
-    	set_time(0, 0, 0, 0, 0, 0, 0);
     	menu_click = 1;
     }
 }
@@ -939,27 +937,6 @@ void mode_auto(int start){
 /*-----------------MODE FUNCTIONS END-----------------*/
 
 void set_time (int set_hours, int set_minutes, int set_seconds, int set_weekday, int set_month, int set_date, int set_year){
-	RTC_TimeTypeDef sTime;
-	  RTC_DateTypeDef sDate;
-	sTime.Hours = 0x2;
-	  sTime.Minutes = 0x5;
-	  sTime.Seconds = 0x10;
-	  sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
-	  sTime.StoreOperation = RTC_STOREOPERATION_RESET;
-	  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
-	  {
-	    Error_Handler();
-	  }
-	  sDate.WeekDay = RTC_WEEKDAY_SATURDAY;
-	  sDate.Month = RTC_MONTH_APRIL;
-	  sDate.Date = 0x10;
-	  sDate.Year = 0x22;
-
-	  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD) != HAL_OK)
-	  {
-	    Error_Handler();
-	  }
-/*
   RTC_TimeTypeDef sTime;
   RTC_DateTypeDef sDate;
   sTime.Hours = set_hours; // set hours
@@ -974,14 +951,13 @@ void set_time (int set_hours, int set_minutes, int set_seconds, int set_weekday,
   sDate.Year = set_year;
   if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD) != HAL_OK){}
   HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR1, 0x32F2); // backup register
-  */
 }
 
 void set_alarm(int alarm, int days_hex, int hours_hex, int mins_hex){
 	RTC_AlarmTypeDef sAlarm = {0};
 	sAlarm.AlarmTime.Hours = 0x2;
 	sAlarm.AlarmTime.Minutes = 0x5;
-	sAlarm.AlarmTime.Seconds = 0x50;
+	sAlarm.AlarmTime.Seconds = 0x20;
 	sAlarm.AlarmTime.SubSeconds = 0x0;
 	sAlarm.AlarmTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
 	sAlarm.AlarmTime.StoreOperation = RTC_STOREOPERATION_RESET;
