@@ -6,3 +6,6 @@ currTime
 Temperature
 Humidity
 adc_result_dma
+sAlarmA
+menu_click
+refresh

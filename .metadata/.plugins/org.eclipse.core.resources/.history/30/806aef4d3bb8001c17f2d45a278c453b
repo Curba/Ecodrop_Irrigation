@@ -670,7 +670,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 			adc_result_percentage[x] = 100-((adc_result_dma[x]-1260)*100/1470);
 		}
 
-		//Water Tank Refill Algorithm
+		//Water tank refill
 		if(adc_result_dma[5] < 3000){
 			HAL_GPIO_WritePin(GPIOA, wellmotor_relay_Pin, GPIO_PIN_SET);
 		}else{

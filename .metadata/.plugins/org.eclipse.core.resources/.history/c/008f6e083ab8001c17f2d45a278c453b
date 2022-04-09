@@ -63,8 +63,12 @@ const int moist_per_line[] = {2,2};
 const int adc_line_number = 2;
 const int adc_moist_number = 4;
 int adc_result_line_avg_percentage = 0;
-int adc_line_avg[2] = {0,0};
+int adc_line_avg[2];
 int adc_total_moist_avg = 0;
+
+
+
+/* Control Variable */
 
 /* Menu Variable */
 int menu_lcd_refresh = 0;
@@ -87,7 +91,7 @@ int line_relays[] = {line0_relay_Pin, line1_relay_Pin};
 int planner_start_time_hours = 17; //0-24
 int planner_start_time_mins = 30; //0-60
 
-/* Auto Mode Variables ------------------------------------------*/
+/* Auto Mode Variables */
 int auto_modes[2][4][9] = {{{1,20,0,0,0,1,0,0,0}, {2,20,0,1,0,0,0,1,0}, {2,30,0,1,0,0,1,0,0}, {2,60,0,1,0,0,1,0,0}},
 							{{1,30,0,0,0,1,0,0,0}, {2,30,0,1,0,0,0,1,0}, {3,60,0,1,0,1,0,1,0}, {3,120,0,1,0,1,0,1,0}}};
 
@@ -103,12 +107,14 @@ int auto_mode_param[2];
 
 int auto_start_time_hours = 18; //2400 format
 int auto_start_time_mins = 0;
+
 int auto_avg_temp = 0;
 int auto_avg_airhum = 0;
+
 int auto_week_skip_vector[7] = {0,0,0,0,0,0,0};
+
 int week_reset_flag = 0;
 int reset_day = 0;
-/* Auto Mode Variables End------------------------------------------*/
 
 /* Real Time Clock */
 RTC_TimeTypeDef currTime = {0};
@@ -136,7 +142,7 @@ int x =0;
 int a =5;
 int b=8;
 int testDummy_manual = 0;
-
+int acimam = 0x1;
 
 
 
@@ -151,7 +157,6 @@ static void MX_I2C1_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_ADC1_Init(void);
 /* USER CODE BEGIN PFP */
-
 
 //MENU
 void menu_func(int refresh, int reset);
@@ -182,7 +187,7 @@ void set_alarm(int alarm, int days_hex, int hours_hex, int mins_hex);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+//lcd16x
 /* USER CODE END 0 */
 
 /**
@@ -219,12 +224,19 @@ int main(void)
   MX_TIM1_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
+  //Initializes line average array
 
+
+  for(int x = 0; x < 4; x ++){
+		  adc_line_avg[x] = 0;
+			}
 
   //HAL_RTCEx_SetSmoothCalib(&hrtc, RTC_SMOOTHCALIB_PERIOD_32SEC, RTC_SMOOTHCALIB_PLUSPULSES_RESET, -511);
   HAL_TIM_Base_Start(&htim1);
   lcd_initial_message();
 
+
+  //RTC_TimeTypeDef sTime = {0};
 
 
   /* USER CODE END 2 */
@@ -237,8 +249,11 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
+
 	  //DHT11_get_value();
 	  get_time();
+
 	  HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_result_dma, adc_channel_lenght);
 	  //mode_planner(0,1);
 	  //mode_manual(mode_manual_start);
@@ -255,6 +270,17 @@ int main(void)
 	      Error_Handler();
 	    }
 */
+
+	  /*
+
+      //lcd_clear ();
+      lcd_send_string(timeBuff);
+      lcd_put_cur(1, 0);
+      lcd_send_string("");
+      //lcd_clear ();
+	*/
+
+
 
 
   }
@@ -669,28 +695,20 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 			adc_result_dma[x] = (adc_result_dma[x]< 1260) ? 1260:adc_result_dma[x];
 			adc_result_percentage[x] = 100-((adc_result_dma[x]-1260)*100/1470);
 		}
-
-		//Water Tank Refill Algorithm
-		if(adc_result_dma[5] < 3000){
-			HAL_GPIO_WritePin(GPIOA, wellmotor_relay_Pin, GPIO_PIN_SET);
-		}else{
-			HAL_GPIO_WritePin(GPIOA, wellmotor_relay_Pin, GPIO_PIN_RESET);
-		}
-
-		//Produces Line and Total Average : adc_line_avg and adc_total_moist_avg
-		adc_total_moist_avg = 0;
-		int y =0;
-		int per_line_offset = moist_per_line[0];
-		for(int x = 0; x < adc_line_number; x++){
-			adc_line_avg[x] = 0;
-			for(; y < per_line_offset; y++){
-				adc_line_avg[x] += adc_result_percentage[y];
+			//Produces Line average : adc_line_avg
+			adc_total_moist_avg = 0;
+			int y =0;
+			int per_line_offset = moist_per_line[0];
+			for(int x = 0; x < adc_line_number; x++){
+				adc_line_avg[x] = 0;
+				for(; y < per_line_offset; y++){
+					adc_line_avg[x] += adc_result_percentage[y];
+				}
+				adc_line_avg[x] /= moist_per_line[x];
+			   per_line_offset += moist_per_line[x+1];
+			   adc_total_moist_avg += adc_line_avg[x];
 			}
-			adc_line_avg[x] /= moist_per_line[x];
-		   per_line_offset += moist_per_line[x+1];
-		   adc_total_moist_avg += adc_line_avg[x];
-		}
-		adc_total_moist_avg /= adc_line_number;
+			adc_total_moist_avg /= adc_line_number;
 	}
 }
 
@@ -920,9 +938,6 @@ void mode_auto(int start){
 
 /*-----------------MODE FUNCTIONS END-----------------*/
 
-
-/*-----------------RTC FUNCTIONS BEGIN-----------------*/
-
 void set_time (int set_hours, int set_minutes, int set_seconds, int set_weekday, int set_month, int set_date, int set_year){
 	RTC_TimeTypeDef sTime;
 	  RTC_DateTypeDef sDate;
@@ -987,8 +1002,6 @@ void get_time(){
 	sprintf(timeBuff,"%d,%d.%d", currTime.Hours, currTime.Minutes, currTime.Seconds);
 	sprintf(dateBuff,"%02d-%02d-%2d",currDate.Date, currDate.Month, 2000 + currDate.Year);
 }
-
-/*-----------------RTC FUNCTIONS END-----------------*/
 
 /*-----------------MENU BEGIN-------------------------*/
 void lcd_initial_message(){
