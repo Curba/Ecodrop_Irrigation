@@ -78,11 +78,13 @@ int current_page = 0;
 int mode_manual_start = 0;
 
 /* Planner Mode Variables */
-int planner_line_compare[2];
+int planner_line_compare[2] = {50,80};
 int planner_line_lenght = sizeof(planner_line_compare) /sizeof(planner_line_compare[0]);
 int relay_set[2];
 int relay_end_flag = 0;
 int line_relays[] = {line0_relay_Pin, line1_relay_Pin};
+int global_planner_start = 0;
+int global_planner_active = 1;
 
 int planner_start_time_hours = 17; //0-24
 int planner_start_time_mins = 30; //0-60
@@ -237,11 +239,11 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-//	  DHT11_get_value();
+	  DHT11_get_value();
+	  HAL_Delay(700);
 	  get_time();
 	  HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_result_dma, adc_channel_lenght);
-	  //mode_planner(0,1);
-	  //mode_manual(mode_manual_start);
+	  mode_planner(0,global_planner_start);
 	  menu_func(menu_lcd_refresh, 0);
 	  HAL_Delay(100);
 /*
@@ -484,8 +486,8 @@ static void MX_RTC_Init(void)
 
   /** Initialize RTC and set the Time and Date
   */
-  sTime.Hours = 0x2;
-  sTime.Minutes = 0x5;
+  sTime.Hours = 0x17;
+  sTime.Minutes = 0x26;
   sTime.Seconds = 0x10;
   sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
   sTime.StoreOperation = RTC_STOREOPERATION_RESET;
@@ -494,8 +496,8 @@ static void MX_RTC_Init(void)
     Error_Handler();
   }
   sDate.WeekDay = RTC_WEEKDAY_SATURDAY;
-  sDate.Month = RTC_MONTH_APRIL;
-  sDate.Date = 0x9;
+  sDate.Month = RTC_MONTH_MAY;
+  sDate.Date = 0x23;
   sDate.Year = 0x22;
 
   if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD) != HAL_OK)
@@ -504,9 +506,9 @@ static void MX_RTC_Init(void)
   }
   /** Enable the Alarm A
   */
-  sAlarm.AlarmTime.Hours = 0x2;
-  sAlarm.AlarmTime.Minutes = 0x5;
-  sAlarm.AlarmTime.Seconds = 0x20;
+  sAlarm.AlarmTime.Hours = 0x17;
+  sAlarm.AlarmTime.Minutes = 0x26;
+  sAlarm.AlarmTime.Seconds = 0x55;
   sAlarm.AlarmTime.SubSeconds = 0x0;
   sAlarm.AlarmTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
   sAlarm.AlarmTime.StoreOperation = RTC_STOREOPERATION_RESET;
@@ -681,16 +683,16 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 			adc_result_dma[x] = (adc_result_dma[x]< 1260) ? 1260:adc_result_dma[x];
 			adc_result_percentage[x] = 100-((adc_result_dma[x]-1260)*100/1470);
 		}
-		//Different sensor
-			adc_result_dma[3] = (adc_result_dma[3]> 3800) ? 3800:adc_result_dma[3];
-			adc_result_dma[3] = (adc_result_dma[3]< 900) ? 900:adc_result_dma[3];
-			adc_result_percentage[3] = 100-((adc_result_dma[3]-900)*100/2900);
+		//Different Moisture Sensor
+		adc_result_dma[3] = (adc_result_dma[3]> 3800) ? 3800:adc_result_dma[3];
+		adc_result_dma[3] = (adc_result_dma[3]< 900) ? 900:adc_result_dma[3];
+		adc_result_percentage[3] = 100-((adc_result_dma[3]-900)*100/2900);
 
 		//Water Tank Refill Algorithm
 		if(adc_result_dma[5] < 3000){
-			HAL_GPIO_WritePin(GPIOA, wellmotor_relay_Pin, GPIO_PIN_SET);
-		}else{
 			HAL_GPIO_WritePin(GPIOA, wellmotor_relay_Pin, GPIO_PIN_RESET);
+		}else{
+			HAL_GPIO_WritePin(GPIOA, wellmotor_relay_Pin, GPIO_PIN_SET);
 		}
 
 		//Produces Line and Total Average : adc_line_avg and adc_total_moist_avg
@@ -719,16 +721,19 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     	menu_down = 1;
     }else if(GPIO_Pin == button_press_Pin){
     	//set_alarm(0, 0, 0, 0);
-    	set_time(0, 0, 0, 0, 0, 0, 0);
+    	//set_time(0, 0, 0, 0, 0, 0, 0);
     	menu_click = 1;
     }
 }
-/*
+
 void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
 {
-	menu_click = 1;
-	menu_click = 0;
-}*/
+	if(global_planner_active){
+		global_planner_start = 1;
+		mode_planner(0, global_planner_start);
+		set_alarm(0,0,0,0);
+	}
+}
 
 
 /*-----------------INTERRUPTS END-----------------------*/
@@ -823,32 +828,43 @@ void mode_manual(int start){
 		  HAL_GPIO_WritePin(GPIOC, tankmotor_relay_Pin, GPIO_PIN_SET);
 		  HAL_GPIO_WritePin(GPIOB, wellmotor_relay_Pin, GPIO_PIN_SET);
 		  HAL_Delay(1000);
-		  HAL_GPIO_WritePin(GPIOC, line0_relay_Pin, GPIO_PIN_SET);1020
+		  HAL_GPIO_WritePin(GPIOC, line0_relay_Pin, GPIO_PIN_SET);
 		  HAL_GPIO_WritePin(GPIOC, line1_relay_Pin, GPIO_PIN_SET);
 	}
 }
 
 void mode_planner(int auto_mode_flag, int start){
 	if(auto_mode_flag == 0 && start == 1){
-		HAL_GPIO_WritePin(GPIOA, tankmotor_relay_Pin, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(GPIOA, wellmotor_relay_Pin, GPIO_PIN_SET);
-		for(int a = 0; a < adc_line_number; a++){
-			for(int x = 0; x < moist_per_line[a]; x++){
-				if(adc_line_avg[x] >= planner_line_compare[x]){
-					relay_set[x] = 1;
-					relay_end_flag = (relay_end_flag == 2) ? 2:relay_end_flag+1;
-					HAL_GPIO_WritePin(GPIOC, line_relays[x], GPIO_PIN_SET);
-				}else{
-					relay_set[x] = 0;
-					relay_end_flag = (relay_end_flag) ? relay_end_flag-1:0;
-					HAL_GPIO_WritePin(GPIOC, line_relays[x], GPIO_PIN_RESET);
-				}
+		HAL_GPIO_WritePin(GPIOC, tankmotor_relay_Pin, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOB, wellmotor_relay_Pin, GPIO_PIN_RESET);
+		delay_us(1000);
+		HAL_GPIO_WritePin(GPIOC, line0_relay_Pin, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOC, line1_relay_Pin, GPIO_PIN_RESET);
+		for(int x = 0; x < adc_line_number; x++){
+			//for(int x = 0; x < moist_per_line[a]; x++){
+			if(adc_line_avg[x] >= planner_line_compare[x]){
+				relay_set[x] = 1;	//Debug
+				relay_end_flag = (relay_end_flag == 2) ? 2:relay_end_flag+1;
+				HAL_GPIO_WritePin(GPIOC, line_relays[x], GPIO_PIN_SET);
+			}else{
+				relay_set[x] = 0;	//Debug
+				relay_end_flag = (relay_end_flag) ? relay_end_flag-1:0;
+				HAL_GPIO_WritePin(GPIOC, line_relays[x], GPIO_PIN_RESET);
 			}
+			//}
 		}
 		if(relay_end_flag == 2){
+			for(int a = 0; a < 2; a++){
+				relay_set[a] = 0;	//Debug
+			}
+			global_planner_start = 0;
 			relay_end_flag = 0;
-			HAL_GPIO_WritePin(GPIOA, tankmotor_relay_Pin, GPIO_PIN_RESET);
-			HAL_GPIO_WritePin(GPIOA, wellmotor_relay_Pin, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(GPIOC, tankmotor_relay_Pin, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(GPIOB, wellmotor_relay_Pin, GPIO_PIN_SET);
+			HAL_Delay(1000);
+			HAL_GPIO_WritePin(GPIOC, line0_relay_Pin, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(GPIOC, line1_relay_Pin, GPIO_PIN_SET);
+
 		}
 	}
 }
@@ -1287,6 +1303,8 @@ void menu_func(int refresh, int reset){
 				if(menu_click){
 					current_page = 1;
 					menu_click = 0;
+					global_planner_start = 1;
+					mode_planner(0, global_planner_start);
 					menu_func(1, 0);
 					break;
 				}else if(menu_down){
