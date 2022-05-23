@@ -2,7 +2,7 @@
 /**
   ******************************************************************************
   * @file           : main.cIGULI
-  * @brief          : Main program bodyadsada
+  * @brief          : Main program body
   ******************************************************************************
   * @attention
   *
@@ -25,6 +25,9 @@
 #include "adc_conversion_handler.h"
 #include "lcd16x2_i2c.h"
 #include "i2c-lcd.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -66,6 +69,12 @@ int adc_result_line_avg_percentage = 0;
 int adc_line_avg[2] = {0,0};
 int adc_total_moist_avg = 0;
 
+char adc_percentage_s0[5];
+char adc_percentage_s1[5];
+char adc_percentage_s2[5];
+char adc_percentage_s3[5];
+
+
 /* Menu Variable */
 int menu_lcd_refresh = 0;
 int menu_click = 0;
@@ -73,6 +82,7 @@ int menu_up = 0;
 int menu_down = 0;
 int next_page=0;
 int current_page = 0;
+int menu_refresher = 0;
 
 /* Manual Mode Variables */
 int mode_manual_start = 0;
@@ -131,6 +141,8 @@ uint16_t SUM, RH, TEMP;
 float inst_temperature = 0;
 float inst_humidity = 0;
 uint8_t Presence = 0;
+char inst_temperature_s[5];
+char inst_humidity_s[5];
 
 /* DEBUG Variables */
 int yanked;
@@ -138,6 +150,7 @@ int x =0;
 int a =5;
 int b=8;
 int testDummy_manual = 0;
+int nextday_dummy = 0;
 
 
 
@@ -178,7 +191,7 @@ void DHT11_get_value();
 //RTC PROTOTYPES
 void set_time (int set_hours, int set_minutes, int set_seconds, int set_weekday, int set_month, int set_date, int set_year);
 void get_time();
-void set_alarm(int alarm, int days_hex, int hours_hex, int mins_hex);
+void set_alarm(int alarm, int hours_hex, int mins_hex, int sec_hex);
 
 /* USER CODE END PFP */
 
@@ -239,15 +252,26 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  HAL_Delay(300);
 	  DHT11_get_value();
-	  HAL_Delay(700);
+	  HAL_Delay(300);
 	  get_time();
 	  HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_result_dma, adc_channel_lenght);
+	  if(menu_refresher == 10){
+		  menu_lcd_refresh = 1;
+		  menu_refresher = 0;
+	  }else{
+		  menu_refresher++;
+	  }
+
 	  mode_planner(0,global_planner_start);
 	  menu_func(menu_lcd_refresh, 0);
 	  HAL_Delay(100);
+	  if(nextday_dummy){
+		  set_time (0,0,0,0,0,0,0);
+	  }
 /*
-	  	 sTime.Hours += 0x1;
+	  	sTime.Hours += 0x1;
 	    sTime.Minutes = 0x2;
 	    sTime.Seconds = 0x0;
 	    sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
@@ -495,7 +519,7 @@ static void MX_RTC_Init(void)
   {
     Error_Handler();
   }
-  sDate.WeekDay = RTC_WEEKDAY_SATURDAY;
+  sDate.WeekDay = RTC_WEEKDAY_MONDAY;
   sDate.Month = RTC_MONTH_MAY;
   sDate.Date = 0x23;
   sDate.Year = 0x22;
@@ -720,8 +744,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     }else if(GPIO_Pin == button_down_Pin){
     	menu_down = 1;
     }else if(GPIO_Pin == button_press_Pin){
-    	//set_alarm(0, 0, 0, 0);
-    	//set_time(0, 0, 0, 0, 0, 0, 0);
     	menu_click = 1;
     }
 }
@@ -865,6 +887,9 @@ void mode_planner(int auto_mode_flag, int start){
 			HAL_GPIO_WritePin(GPIOC, line0_relay_Pin, GPIO_PIN_SET);
 			HAL_GPIO_WritePin(GPIOC, line1_relay_Pin, GPIO_PIN_SET);
 
+			//Alarm for the Next Day
+			set_alarm(0,0,0,0);
+
 		}
 	}
 }
@@ -886,6 +911,10 @@ void mode_auto(int start){
 */
 
 //Function is called with alarm
+	int auto_hours = 0;
+	int auto_mins = 0;
+	int auto_secs = 0;
+
 	if(adc_result_dma[4] > 2000 || adc_total_moist_avg > 80){
 		//Skip Day
 		auto_week_skip_vector[currDate.WeekDay-1] = 1;
@@ -920,31 +949,39 @@ void mode_auto(int start){
 	//Day Skipped?
 	if(auto_week_skip_vector[(currDate.WeekDay)-1] == 0){
 		//Rain or >80 humidity (Just Rained)
-		for(int x = 0; x < adc_line_number; x++){
-			if(auto_avg_temp > auto_limits[0] && auto_avg_airhum < auto_limits[3]){
-				//High
-				if(auto_modes[x][3][(currDate.WeekDay)+1] == 1){
-					//auto_modes[x][3][1]dk timer ya da alarm
-				}
-			}else if(auto_avg_temp > auto_limits[0] && auto_avg_airhum < auto_limits[2]){
-				//Mid
-				if(auto_modes[x][2][(currDate.WeekDay)+1] == 1){
-					//auto_modes[x][2][1]dk timer ya da alarm
-				}
-			}else if(auto_avg_temp > auto_limits[0]){
-				//Low
-				if(auto_modes[x][1][(currDate.WeekDay)+1] == 1){
-					//auto_modes[x][1][1]dk timer ya da alarm
-				}
-			}else if(auto_avg_temp > auto_limits[1]){
-				//Min
-				if(auto_modes[x][1][(currDate.WeekDay)+1] == 1){
-					//auto_modes[x][1][1]dk timer ya da alarm
-				}
+		if(inst_humidity > 80 || adc_result_dma[4] > 3000){
+			auto_week_skip_vector[(currDate.WeekDay)-1] = 1;
+		}else{
+			for(int x = 0; x < adc_line_number; x++){
+				if(auto_avg_temp > auto_limits[0] && auto_avg_airhum < auto_limits[3]){
+					//High
+					if(auto_modes[x][3][(currDate.WeekDay)+1] == 1){
+						//auto_hours = auto_modes[x][3][1]/60;
+						//auto_hours = (auto_hours < 1) ? 0: auto_hours;
+						//currTime.Hours, currTime.Minutes, currTime.Seconds
+						//void set_time (int set_hours, int set_minutes, int set_seconds, int set_weekday, int set_month, int set_date, int set_year)
+						//auto_modes[x][3][1]dk timer ya da alarm
+					}
+				}else if(auto_avg_temp > auto_limits[0] && auto_avg_airhum < auto_limits[2]){
+					//Mid
+					if(auto_modes[x][2][(currDate.WeekDay)+1] == 1){
+						//auto_modes[x][2][1]dk timer ya da alarm
+					}
+				}else if(auto_avg_temp > auto_limits[0]){
+					//Low
+					if(auto_modes[x][1][(currDate.WeekDay)+1] == 1){
+						//auto_modes[x][1][1]dk timer ya da alarm
+					}
+				}else if(auto_avg_temp > auto_limits[1]){
+					//Min
+					if(auto_modes[x][1][(currDate.WeekDay)+1] == 1){
+						//auto_modes[x][1][1]dk timer ya da alarm
+					}
 
-			}else{
-				//Skip Day
-				auto_week_skip_vector[(currDate.WeekDay)-1] = 1;
+				}else{
+					//Skip Day
+					auto_week_skip_vector[(currDate.WeekDay)-1] = 1;
+				}
 			}
 		}
 	}
@@ -958,18 +995,18 @@ void mode_auto(int start){
 void set_time (int set_hours, int set_minutes, int set_seconds, int set_weekday, int set_month, int set_date, int set_year){
 	RTC_TimeTypeDef sTime;
 	  RTC_DateTypeDef sDate;
-	sTime.Hours = 0x2;
-	  sTime.Minutes = 0x5;
-	  sTime.Seconds = 0x10;
+	sTime.Hours = 0x17;
+	  sTime.Minutes = 0x26;
+	  sTime.Seconds = 0x30;
 	  sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
 	  sTime.StoreOperation = RTC_STOREOPERATION_RESET;
 	  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
 	  {
 	    Error_Handler();
 	  }
-	  sDate.WeekDay = RTC_WEEKDAY_SATURDAY;
-	  sDate.Month = RTC_MONTH_APRIL;
-	  sDate.Date = 0x10;
+	  sDate.WeekDay = RTC_WEEKDAY_TUESDAY;
+	  sDate.Month = RTC_MONTH_MAY;
+	  sDate.Date = 0x24;
 	  sDate.Year = 0x22;
 
 	  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD) != HAL_OK)
@@ -994,11 +1031,17 @@ void set_time (int set_hours, int set_minutes, int set_seconds, int set_weekday,
   */
 }
 
-void set_alarm(int alarm, int days_hex, int hours_hex, int mins_hex){
+void set_alarm(int alarm, int hours_hex, int mins_hex, int sec_hex){
 	RTC_AlarmTypeDef sAlarm = {0};
-	sAlarm.AlarmTime.Hours = 0x2;
-	sAlarm.AlarmTime.Minutes = 0x5;
-	sAlarm.AlarmTime.Seconds = 0x50;
+	/*
+	sAlarm.AlarmTime.Hours = hours_hex;
+	sAlarm.AlarmTime.Minutes = mins_hex;
+	sAlarm.AlarmTime.Seconds = sec_hex;
+	*/
+	sAlarm.AlarmTime.Hours = 0x17;
+	sAlarm.AlarmTime.Minutes = 0x26;
+	sAlarm.AlarmTime.Seconds = 0x45;
+
 	sAlarm.AlarmTime.SubSeconds = 0x0;
 	sAlarm.AlarmTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
 	sAlarm.AlarmTime.StoreOperation = RTC_STOREOPERATION_RESET;
@@ -1033,7 +1076,7 @@ void lcd_initial_message(){
 	lcd_send_cmd (0x01);
 	HAL_Delay(100);
 	lcd_init ();
-	lcd_send_string ("> Manual Mode");
+
 	lcd_put_cur(1, 0);
 	lcd_send_string("  Planner Mode  ");
 
@@ -1293,7 +1336,7 @@ void menu_func(int refresh, int reset){
 				}else{
 					current_page = 11;
 					lcd_init ();
-					lcd_send_string ("> Saat Loopu");
+					lcd_send_string ("> Clock Loop");
 					lcd_put_cur(1, 0);
 					lcd_send_string("  ");
 				}
@@ -1356,9 +1399,25 @@ void menu_func(int refresh, int reset){
 				}else{
 					current_page = 14;
 					lcd_init ();
-					lcd_send_string ("> INFO DISP");
+					itoa(inst_temperature, inst_temperature_s,10);
+					itoa(inst_humidity,inst_humidity_s,10);
+					itoa(adc_result_percentage[0],adc_percentage_s0,10);
+					lcd_send_string("T:");
+					lcd_send_string(inst_temperature_s);
+					lcd_send_string(" H:");
+					lcd_send_string(inst_humidity_s);
+					lcd_send_string(" S1:");
+					lcd_send_string(adc_percentage_s0);
 					lcd_put_cur(1, 0);
-					lcd_send_string("  ");
+					itoa(adc_result_percentage[1],adc_percentage_s1,10);
+					itoa(adc_result_percentage[2],adc_percentage_s2,10);
+					itoa(adc_result_percentage[3],adc_percentage_s3,10);
+					lcd_send_string(" S2:");
+					lcd_send_string(adc_percentage_s1);
+					lcd_send_string(" S3:");
+					lcd_send_string(adc_percentage_s2);
+					lcd_send_string(" S4:");
+					lcd_send_string(adc_percentage_s3);
 				}
 				break;
 

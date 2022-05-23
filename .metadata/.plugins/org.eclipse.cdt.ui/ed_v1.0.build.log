@@ -1,6 +1,16 @@
-17:47:19 **** Incremental Build of configuration Debug for project ed_v1.0 ****
+00:22:17 **** Incremental Build of configuration Debug for project ed_v1.0 ****
 make -j16 all 
 arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F401xC -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'mode_auto':
+../Core/Src/main.c:916:6: warning: unused variable 'auto_secs' [-Wunused-variable]
+  916 |  int auto_secs = 0;
+      |      ^~~~~~~~~
+../Core/Src/main.c:915:6: warning: unused variable 'auto_mins' [-Wunused-variable]
+  915 |  int auto_mins = 0;
+      |      ^~~~~~~~~
+../Core/Src/main.c:914:6: warning: unused variable 'auto_hours' [-Wunused-variable]
+  914 |  int auto_hours = 0;
+      |      ^~~~~~~~~~
 arm-none-eabi-gcc -o "ed_v1.0.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\baris\Desktop\EEE 497\STM\Ecodrops_V0.1\ed_v1.0\ed_v1.0\STM32F401CCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="ed_v1.0.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: ed_v1.0.elf
  
@@ -8,7 +18,7 @@ arm-none-eabi-objdump -h -S  ed_v1.0.elf  > "ed_v1.0.list"
 arm-none-eabi-objcopy  -O binary  ed_v1.0.elf  "ed_v1.0.bin"
 arm-none-eabi-size   ed_v1.0.elf 
    text	   data	    bss	    dec	    hex	filename
-  26300	    140	   2156	  28596	   6fb4	ed_v1.0.elf
+  27660	    140	   2212	  30012	   753c	ed_v1.0.elf
 Finished building: default.size.stdout
  
 Finished building: ed_v1.0.bin
@@ -16,5 +26,5 @@ Finished building: ed_v1.0.bin
 Finished building: ed_v1.0.list
  
 
-17:47:22 Build Finished. 0 errors, 0 warnings. (took 2s.654ms)
+00:22:18 Build Finished. 0 errors, 3 warnings. (took 1s.192ms)
 

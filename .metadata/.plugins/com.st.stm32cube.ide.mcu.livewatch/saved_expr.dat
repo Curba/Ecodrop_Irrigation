@@ -10,3 +10,12 @@ sAlarmA
 menu_click
 refresh
 menu_lcd_refresh
+menu_up
+menu_down
+menu_click
+global_planner_start
+relay_set
+relay_end_flag
+adc_line_avg
+nextday_dummy
+menu_refresher
