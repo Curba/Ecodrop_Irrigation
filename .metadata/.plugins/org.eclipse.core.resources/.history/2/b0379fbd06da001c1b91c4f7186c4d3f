@@ -681,10 +681,6 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 			adc_result_dma[x] = (adc_result_dma[x]< 1260) ? 1260:adc_result_dma[x];
 			adc_result_percentage[x] = 100-((adc_result_dma[x]-1260)*100/1470);
 		}
-		//Different sensor
-			adc_result_dma[3] = (adc_result_dma[3]> 3800) ? 3800:adc_result_dma[3];
-			adc_result_dma[3] = (adc_result_dma[3]< 900) ? 900:adc_result_dma[3];
-			adc_result_percentage[3] = 100-((adc_result_dma[3]-900)*100/2900);
 
 		//Water Tank Refill Algorithm
 		if(adc_result_dma[5] < 3000){
@@ -823,7 +819,7 @@ void mode_manual(int start){
 		  HAL_GPIO_WritePin(GPIOC, tankmotor_relay_Pin, GPIO_PIN_SET);
 		  HAL_GPIO_WritePin(GPIOB, wellmotor_relay_Pin, GPIO_PIN_SET);
 		  HAL_Delay(1000);
-		  HAL_GPIO_WritePin(GPIOC, line0_relay_Pin, GPIO_PIN_SET);1020
+		  HAL_GPIO_WritePin(GPIOC, line0_relay_Pin, GPIO_PIN_SET);
 		  HAL_GPIO_WritePin(GPIOC, line1_relay_Pin, GPIO_PIN_SET);
 	}
 }

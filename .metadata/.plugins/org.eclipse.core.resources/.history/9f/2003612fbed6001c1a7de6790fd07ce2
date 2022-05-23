@@ -603,10 +603,10 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, tankmotor_relay_Pin|line1_relay_Pin|line0_relay_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOC, tankmotor_relay_Pin|line1_relay_Pin|line0_relay_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(wellmotor_relay_GPIO_Port, wellmotor_relay_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(wellmotor_relay_GPIO_Port, wellmotor_relay_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : tankmotor_relay_Pin line1_relay_Pin line0_relay_Pin */
   GPIO_InitStruct.Pin = tankmotor_relay_Pin|line1_relay_Pin|line0_relay_Pin;
@@ -615,16 +615,16 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : light_exti_sens_Pin */
-  GPIO_InitStruct.Pin = light_exti_sens_Pin;
+  /*Configure GPIO pins : light_exti_sens_Pin button_press_Pin */
+  GPIO_InitStruct.Pin = light_exti_sens_Pin|button_press_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(light_exti_sens_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : button_up_Pin button_down_Pin */
-  GPIO_InitStruct.Pin = button_up_Pin|button_down_Pin;
+  /*Configure GPIO pins : button_up_Pin button_down_Pin ac_source_Pin */
+  GPIO_InitStruct.Pin = button_up_Pin|button_down_Pin|ac_source_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pin : wellmotor_relay_Pin */
@@ -633,18 +633,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(wellmotor_relay_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : ac_source_Pin */
-  GPIO_InitStruct.Pin = ac_source_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(ac_source_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : button_press_Pin */
-  GPIO_InitStruct.Pin = button_press_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
-  HAL_GPIO_Init(button_press_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : dht_in_Pin */
   GPIO_InitStruct.Pin = dht_in_Pin;
@@ -676,15 +664,11 @@ void delay_us (uint16_t us)
 /*-----------------INTERRUPTS BEGIN-----------------------*/
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 	if(hadc == &hadc1){
-		for(int x =0; x<adc_moist_number-1; x++){
+		for(int x =0; x<adc_moist_number; x++){
 			adc_result_dma[x] = (adc_result_dma[x]> 2730) ? 2730:adc_result_dma[x];
 			adc_result_dma[x] = (adc_result_dma[x]< 1260) ? 1260:adc_result_dma[x];
 			adc_result_percentage[x] = 100-((adc_result_dma[x]-1260)*100/1470);
 		}
-		//Different sensor
-			adc_result_dma[3] = (adc_result_dma[3]> 3800) ? 3800:adc_result_dma[3];
-			adc_result_dma[3] = (adc_result_dma[3]< 900) ? 900:adc_result_dma[3];
-			adc_result_percentage[3] = 100-((adc_result_dma[3]-900)*100/2900);
 
 		//Water Tank Refill Algorithm
 		if(adc_result_dma[5] < 3000){
@@ -814,17 +798,17 @@ void DHT11_get_value(){
 /*-----------------MODE FUNCTIONS BEGIN-----------------*/
 void mode_manual(int start){
 	if(start){
-		  HAL_GPIO_WritePin(GPIOC, tankmotor_relay_Pin, GPIO_PIN_RESET);
-		  HAL_GPIO_WritePin(GPIOB, wellmotor_relay_Pin, GPIO_PIN_RESET);
-		  HAL_Delay(1000);
-		  HAL_GPIO_WritePin(GPIOC, line0_relay_Pin, GPIO_PIN_RESET);
-		  HAL_GPIO_WritePin(GPIOC, line1_relay_Pin, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOA, line0_relay_Pin, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOA, line1_relay_Pin, GPIO_PIN_RESET);
+		HAL_Delay(1000);
+		HAL_GPIO_WritePin(GPIOA, tankmotor_relay_Pin, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOA, wellmotor_relay_Pin, GPIO_PIN_RESET);
 	}else{
-		  HAL_GPIO_WritePin(GPIOC, tankmotor_relay_Pin, GPIO_PIN_SET);
-		  HAL_GPIO_WritePin(GPIOB, wellmotor_relay_Pin, GPIO_PIN_SET);
-		  HAL_Delay(1000);
-		  HAL_GPIO_WritePin(GPIOC, line0_relay_Pin, GPIO_PIN_SET);1020
-		  HAL_GPIO_WritePin(GPIOC, line1_relay_Pin, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(GPIOA, tankmotor_relay_Pin, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(GPIOA, wellmotor_relay_Pin, GPIO_PIN_SET);
+		HAL_Delay(1000);
+		HAL_GPIO_WritePin(GPIOA, line0_relay_Pin, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(GPIOA, line1_relay_Pin, GPIO_PIN_SET);
 	}
 }
 

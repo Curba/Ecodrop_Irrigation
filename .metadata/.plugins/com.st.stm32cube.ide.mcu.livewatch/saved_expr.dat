@@ -9,3 +9,4 @@ adc_result_dma
 sAlarmA
 menu_click
 refresh
+menu_lcd_refresh
