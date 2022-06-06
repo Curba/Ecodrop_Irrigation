@@ -750,11 +750,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
 {
-	if(global_planner_active){
+	/*if(global_planner_active){
 		global_planner_start = 1;
 		mode_planner(0, global_planner_start);
 		set_alarm(0,0,0,0);
-	}
+	}*/
 }
 
 
@@ -1076,7 +1076,7 @@ void lcd_initial_message(){
 	lcd_send_cmd (0x01);
 	HAL_Delay(100);
 	lcd_init ();
-
+	lcd_send_string ("> Manual Mode");
 	lcd_put_cur(1, 0);
 	lcd_send_string("  Planner Mode  ");
 
