@@ -1,35 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="inst_humidity"/>
+		<item key="selection" value="ADC"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
-			<item value="inst_humidity"/>
-			<item value="planner"/>
-			<item value="mode_manual_start"/>
-			<item value="global_planner_start"/>
-			<item value="planner_start"/>
-			<item value="relay_set"/>
-			<item value="planner_line_compare"/>
-			<item value="menu_click"/>
+			<item value="ADC"/>
+			<item value="DMA"/>
 			<item value="adc_result_dma"/>
-			<item value="mode_manual"/>
-			<item value="menu_lcd_refresh"/>
-			<item value="acimam"/>
-			<item value="RTC"/>
-			<item value="timeBuff"/>
+			<item value="switch"/>
+			<item value="mode_auto"/>
+			<item value="adc_total_moist_avg"/>
+			<item value="auto_avg_temp"/>
+			<item value="EXTI"/>
+			<item value="current_min"/>
+			<item value="current"/>
+			<item value="mode_planner"/>
+			<item value="planner_line"/>
+			<item value="1000"/>
+			<item value="dma"/>
+			<item value="waterflow"/>
 		</list>
 		<list key="replacehistory">
+			<item value="auto_debug_weekday"/>
+			<item value="current_mode"/>
+			<item value="donewatering"/>
 			<item value="global_planner_start"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="1143"/>
-		<item key="DIALOG_Y_ORIGIN" value="433"/>
+		<item key="DIALOG_X_ORIGIN" value="916"/>
+		<item key="DIALOG_Y_ORIGIN" value="343"/>
 		<item key="DIALOG_WIDTH" value="336"/>
 		<item key="DIALOG_HEIGHT" value="454"/>
 		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>

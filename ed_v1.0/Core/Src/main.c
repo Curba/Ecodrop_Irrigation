@@ -25,9 +25,12 @@
 #include "adc_conversion_handler.h"
 #include "lcd16x2_i2c.h"
 #include "i2c-lcd.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "stdio.h"
+#include "stdbool.h"
+#include "stdint.h"
+#include "string.h"
+#include "stdlib.h"
+#include "cJSON.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -55,6 +58,8 @@ I2C_HandleTypeDef hi2c1;
 RTC_HandleTypeDef hrtc;
 
 TIM_HandleTypeDef htim1;
+
+UART_HandleTypeDef huart6;
 
 /* USER CODE BEGIN PV */
 
@@ -98,6 +103,7 @@ int global_planner_active = 1;
 
 int planner_start_time_hours = 17; //0-24
 int planner_start_time_mins = 30; //0-60
+int planner_weekdays [7] = {0,0,0,0,0,0,0};
 
 /* Auto Mode Variables ------------------------------------------*/
 int auto_modes[2][4][9] = {{{1,20,0,0,0,1,0,0,0}, {2,20,0,1,0,0,0,1,0}, {2,30,0,1,0,0,1,0,0}, {2,60,0,1,0,0,1,0,0}},
@@ -133,6 +139,9 @@ int set_year = 0;
 
 RTC_AlarmTypeDef sAlarmA = {0};
 RTC_AlarmTypeDef sAlarmB = {0};
+int current_hour = 0;
+int current_min = 0;
+int current_wday = 0;
 
 /* DHT Temp Sensor Variables */
 uint8_t Rh_byte1, Rh_byte2, Temp_byte1, Temp_byte2;
@@ -144,6 +153,37 @@ uint8_t Presence = 0;
 char inst_temperature_s[5];
 char inst_humidity_s[5];
 
+
+/* ESP32-UART Variables */
+
+char str_tempJSON[1000], str_humJSON[1000], str_flowJSON[1000], str_s1JSON[1000], str_s2JSON[1000];
+char str_s3JSON[1000], str_s4JSON[800], str_rainJSON[800], str_daylightJSON[800], str_tankJSON[1000];
+char str_modJSON[1000], str_relaytankJSON[800], str_relaywellJSON[1000], str_relayline1JSON[1000];
+char str_relayline2JSON[1000], str_donewateringJSON[1000];
+char str_debughourJSON[1000];
+char str_debugminuteJSON[1000];
+char str_debugskipdayJSON[1000];
+
+int wellrelay = 0;
+int tankrelay = 0;
+int line1relay = 0;
+int line2relay = 0;
+int donewatering = 0;
+int rain = 0;
+int daylight = 0;
+int current_mode = 0;
+int waterflow = 0;
+int auto_select = 0;
+
+char JSON[1200];
+char rx_buffer[200];
+
+uint8_t rx_data = 0;
+unsigned int rx_index = 0;
+
+cJSON *str_json, *str_c_tempJSON;
+long last = 0;
+
 /* DEBUG Variables */
 int yanked;
 int x =0;
@@ -151,8 +191,12 @@ int a =5;
 int b=8;
 int testDummy_manual = 0;
 int nextday_dummy = 0;
-
-
+int mode_dummy = 0;
+int debug_hours = 0;
+int debug_mins = 0;
+int auto_debug_weekday = 0;
+int debug_auto_case =0;
+int skipday = 0;
 
 
 /* USER CODE END PV */
@@ -165,6 +209,7 @@ static void MX_RTC_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_ADC1_Init(void);
+static void MX_USART6_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 
@@ -174,7 +219,7 @@ void lcd_initial_message();
 
 //MODES
 void mode_manual(int start);
-void mode_planner(int auto_mode_flag, int start);
+void mode_planner(int auto_current_mode, int start);
 void mode_auto();
 
 //DELAY
@@ -189,9 +234,23 @@ void Set_Pin_Output (GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin);
 void DHT11_get_value();
 
 //RTC PROTOTYPES
-void set_time (int set_hours, int set_minutes, int set_seconds, int set_weekday, int set_month, int set_date, int set_year);
+void set_time (int set_hours, int set_minutes, int set_weekday);
 void get_time();
-void set_alarm(int alarm, int hours_hex, int mins_hex, int sec_hex);
+void set_alarm(int hours_hex, int mins_hex, int weekday_hex);
+int bcdToDec(int val);
+int decToBcd(int val);
+
+
+//ESP32 Connections
+void SendData(unsigned int tempJSON, unsigned int humJSON, unsigned int flowJSON, unsigned int s1JSON, unsigned int s2JSON,
+		unsigned int s3JSON, unsigned int s4JSON, unsigned int rainJSON, unsigned int daylightJSON, unsigned int tankJSON,
+		unsigned int modJSON, unsigned int relaytankJSON, unsigned int relaywellJSON, unsigned int relayline1JSON,
+		unsigned int relayline2JSON, unsigned int donewateringJSON,
+		unsigned int debughourJSON, unsigned int debugminuteJSON, unsigned int debugskipdayJSON);
+
+void uart_received(void);
+void clearbufferEnd(void);
+void XuLyJson(char *DataJson);
 
 /* USER CODE END PFP */
 
@@ -233,13 +292,15 @@ int main(void)
   MX_I2C1_Init();
   MX_TIM1_Init();
   MX_ADC1_Init();
+  MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
 
 
   HAL_RTCEx_SetSmoothCalib(&hrtc, RTC_SMOOTHCALIB_PERIOD_32SEC, RTC_SMOOTHCALIB_PLUSPULSES_RESET, -511);
   HAL_TIM_Base_Start(&htim1);
   lcd_initial_message();
-
+  HAL_UART_Receive_IT(&huart6, &rx_data, 1);
+  last = HAL_GetTick();
 
 
   /* USER CODE END 2 */
@@ -252,9 +313,9 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  HAL_Delay(300);
+	  HAL_Delay(500);
 	  DHT11_get_value();
-	  HAL_Delay(300);
+	  HAL_Delay(900);
 	  get_time();
 	  HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_result_dma, adc_channel_lenght);
 	  if(menu_refresher == 10){
@@ -264,25 +325,20 @@ int main(void)
 		  menu_refresher++;
 	  }
 
-	  mode_planner(0,global_planner_start);
+	  if(HAL_GetTick() - last >= 1500){
+	  		  SendData(inst_temperature, inst_humidity, waterflow ,adc_result_percentage[0],
+	  				  adc_result_percentage[1],adc_result_percentage[2], adc_result_percentage[3], rain, daylight,
+					  adc_result_percentage[5], current_mode, tankrelay, wellrelay, line1relay, line2relay,
+					  donewatering, current_hour, current_min, skipday);
+	  		  last = HAL_GetTick();
+	  	  }
+	  mode_planner(0, global_planner_start);
 	  menu_func(menu_lcd_refresh, 0);
 	  HAL_Delay(100);
+
 	  if(nextday_dummy){
-		  set_time (0,0,0,0,0,0,0);
+		  set_time (decToBcd(17), decToBcd(30), auto_debug_weekday);
 	  }
-/*
-	  	sTime.Hours += 0x1;
-	    sTime.Minutes = 0x2;
-	    sTime.Seconds = 0x0;
-	    sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
-	    sTime.StoreOperation = RTC_STOREOPERATION_RESET;
-	    if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
-	    {
-	      Error_Handler();
-	    }
-*/
-
-
   }
   /* USER CODE END 3 */
 }
@@ -511,7 +567,7 @@ static void MX_RTC_Init(void)
   /** Initialize RTC and set the Time and Date
   */
   sTime.Hours = 0x17;
-  sTime.Minutes = 0x26;
+  sTime.Minutes = 0x30;
   sTime.Seconds = 0x10;
   sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
   sTime.StoreOperation = RTC_STOREOPERATION_RESET;
@@ -520,8 +576,8 @@ static void MX_RTC_Init(void)
     Error_Handler();
   }
   sDate.WeekDay = RTC_WEEKDAY_MONDAY;
-  sDate.Month = RTC_MONTH_MAY;
-  sDate.Date = 0x23;
+  sDate.Month = RTC_MONTH_JUNE;
+  sDate.Date = 0x13;
   sDate.Year = 0x22;
 
   if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD) != HAL_OK)
@@ -531,15 +587,15 @@ static void MX_RTC_Init(void)
   /** Enable the Alarm A
   */
   sAlarm.AlarmTime.Hours = 0x17;
-  sAlarm.AlarmTime.Minutes = 0x26;
-  sAlarm.AlarmTime.Seconds = 0x55;
+  sAlarm.AlarmTime.Minutes = 0x30;
+  sAlarm.AlarmTime.Seconds = 0x15;
   sAlarm.AlarmTime.SubSeconds = 0x0;
   sAlarm.AlarmTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
   sAlarm.AlarmTime.StoreOperation = RTC_STOREOPERATION_RESET;
-  sAlarm.AlarmMask = RTC_ALARMMASK_DATEWEEKDAY;
+  sAlarm.AlarmMask = RTC_ALARMMASK_NONE;
   sAlarm.AlarmSubSecondMask = RTC_ALARMSUBSECONDMASK_ALL;
   sAlarm.AlarmDateWeekDaySel = RTC_ALARMDATEWEEKDAYSEL_WEEKDAY;
-  sAlarm.AlarmDateWeekDay = RTC_WEEKDAY_SATURDAY;
+  sAlarm.AlarmDateWeekDay = RTC_WEEKDAY_WEDNESDAY;
   sAlarm.Alarm = RTC_ALARM_A;
   if (HAL_RTC_SetAlarm_IT(&hrtc, &sAlarm, RTC_FORMAT_BCD) != HAL_OK)
   {
@@ -598,6 +654,39 @@ static void MX_TIM1_Init(void)
 }
 
 /**
+  * @brief USART6 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART6_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART6_Init 0 */
+
+  /* USER CODE END USART6_Init 0 */
+
+  /* USER CODE BEGIN USART6_Init 1 */
+
+  /* USER CODE END USART6_Init 1 */
+  huart6.Instance = USART6;
+  huart6.Init.BaudRate = 9600;
+  huart6.Init.WordLength = UART_WORDLENGTH_8B;
+  huart6.Init.StopBits = UART_STOPBITS_1;
+  huart6.Init.Parity = UART_PARITY_NONE;
+  huart6.Init.Mode = UART_MODE_TX_RX;
+  huart6.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart6.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart6) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART6_Init 2 */
+
+  /* USER CODE END USART6_Init 2 */
+
+}
+
+/**
   * Enable DMA controller clock
   */
 static void MX_DMA_Init(void)
@@ -641,11 +730,11 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : light_exti_sens_Pin */
-  GPIO_InitStruct.Pin = light_exti_sens_Pin;
+  /*Configure GPIO pins : light_exti_sens_Pin button_press_Pin */
+  GPIO_InitStruct.Pin = light_exti_sens_Pin|button_press_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(light_exti_sens_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : button_up_Pin button_down_Pin */
   GPIO_InitStruct.Pin = button_up_Pin|button_down_Pin;
@@ -666,12 +755,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(ac_source_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : button_press_Pin */
-  GPIO_InitStruct.Pin = button_press_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
-  HAL_GPIO_Init(button_press_GPIO_Port, &GPIO_InitStruct);
-
   /*Configure GPIO pin : dht_in_Pin */
   GPIO_InitStruct.Pin = dht_in_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
@@ -684,6 +767,9 @@ static void MX_GPIO_Init(void)
 
   HAL_NVIC_SetPriority(EXTI1_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
@@ -712,12 +798,19 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 		adc_result_dma[3] = (adc_result_dma[3]< 900) ? 900:adc_result_dma[3];
 		adc_result_percentage[3] = 100-((adc_result_dma[3]-900)*100/2900);
 
+		adc_result_percentage[5] =100-((adc_result_dma[5])*100/4000);
+
 		//Water Tank Refill Algorithm
-		if(adc_result_dma[5] < 3000){
-			HAL_GPIO_WritePin(GPIOA, wellmotor_relay_Pin, GPIO_PIN_RESET);
+		if(adc_result_dma[5] < 1800){
+			HAL_GPIO_WritePin(GPIOB, wellmotor_relay_Pin, GPIO_PIN_RESET);
+			wellrelay = 1;
 		}else{
-			HAL_GPIO_WritePin(GPIOA, wellmotor_relay_Pin, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(GPIOB, wellmotor_relay_Pin, GPIO_PIN_SET);
+			wellrelay = 0;
 		}
+		rain = (adc_result_dma[4] < 2600) ? 1:0;
+		daylight = (adc_result_dma[4] > 3000) ? 1:0;
+		waterflow = ((adc_result_dma[6])*100/4000);
 
 		//Produces Line and Total Average : adc_line_avg and adc_total_moist_avg
 		adc_total_moist_avg = 0;
@@ -750,11 +843,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
 {
-	/*if(global_planner_active){
+	if(global_planner_active){
 		global_planner_start = 1;
 		mode_planner(0, global_planner_start);
-		set_alarm(0,0,0,0);
-	}*/
+	}
 }
 
 
@@ -783,9 +875,9 @@ void Set_Pin_Input (GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin)
 void DHT11_Start (void)
 {
 	Set_Pin_Output (DHT11_PORT, DHT11_PIN);  // set the pin as output
-	HAL_GPIO_WritePin (DHT11_PORT, DHT11_PIN, 0);   // pull the pin low
+	HAL_GPIO_WritePin (DHT11_PORT, DHT11_PIN, GPIO_PIN_RESET);   // pull the pin low
 	delay_us (18000);   // wait for 18ms
-    HAL_GPIO_WritePin (DHT11_PORT, DHT11_PIN, 1);   // pull the pin high
+    HAL_GPIO_WritePin (DHT11_PORT, DHT11_PIN, GPIO_PIN_SET);   // pull the pin high
     delay_us (20);   // wait for 20us
 	Set_Pin_Input(DHT11_PORT, DHT11_PIN);    // set as input
 }
@@ -841,37 +933,59 @@ void DHT11_get_value(){
 /*-----------------MODE FUNCTIONS BEGIN-----------------*/
 void mode_manual(int start){
 	if(start){
+		  current_mode = 1;
+		  donewatering = 0;
 		  HAL_GPIO_WritePin(GPIOC, tankmotor_relay_Pin, GPIO_PIN_RESET);
 		  HAL_GPIO_WritePin(GPIOB, wellmotor_relay_Pin, GPIO_PIN_RESET);
-		  HAL_Delay(1000);
+		  wellrelay = 1;
+		  tankrelay = 1;
+		  delay_us (5000);
 		  HAL_GPIO_WritePin(GPIOC, line0_relay_Pin, GPIO_PIN_RESET);
 		  HAL_GPIO_WritePin(GPIOC, line1_relay_Pin, GPIO_PIN_RESET);
+		  line1relay = 1;
+		  line2relay = 1;
 	}else{
+		current_mode = 0;
+		donewatering = 1;
 		  HAL_GPIO_WritePin(GPIOC, tankmotor_relay_Pin, GPIO_PIN_SET);
 		  HAL_GPIO_WritePin(GPIOB, wellmotor_relay_Pin, GPIO_PIN_SET);
-		  HAL_Delay(1000);
+		  wellrelay = 0;
+		  tankrelay = 0;
+		  delay_us (5000);
 		  HAL_GPIO_WritePin(GPIOC, line0_relay_Pin, GPIO_PIN_SET);
 		  HAL_GPIO_WritePin(GPIOC, line1_relay_Pin, GPIO_PIN_SET);
+		  line1relay = 0;
+		  line2relay = 0;
 	}
 }
 
-void mode_planner(int auto_mode_flag, int start){
-	if(auto_mode_flag == 0 && start == 1){
+void mode_planner(int auto_current_mode, int start){
+	if(auto_current_mode == 0 && start == 1){
+		current_mode = 2;
+		donewatering = 0;
 		HAL_GPIO_WritePin(GPIOC, tankmotor_relay_Pin, GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(GPIOB, wellmotor_relay_Pin, GPIO_PIN_RESET);
+		wellrelay = 1;
+		tankrelay = 1;
 		delay_us(1000);
 		HAL_GPIO_WritePin(GPIOC, line0_relay_Pin, GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(GPIOC, line1_relay_Pin, GPIO_PIN_RESET);
+		line1relay = 1;
+		line2relay = 1;
 		for(int x = 0; x < adc_line_number; x++){
 			//for(int x = 0; x < moist_per_line[a]; x++){
 			if(adc_line_avg[x] >= planner_line_compare[x]){
 				relay_set[x] = 1;	//Debug
 				relay_end_flag = (relay_end_flag == 2) ? 2:relay_end_flag+1;
 				HAL_GPIO_WritePin(GPIOC, line_relays[x], GPIO_PIN_SET);
+				line1relay = (x) ? 1:0;
+				line2relay = (x) ? 0:1;
 			}else{
 				relay_set[x] = 0;	//Debug
 				relay_end_flag = (relay_end_flag) ? relay_end_flag-1:0;
 				HAL_GPIO_WritePin(GPIOC, line_relays[x], GPIO_PIN_RESET);
+				line1relay = (x) ? 0:1;
+				line2relay = (x) ? 1:0;
 			}
 			//}
 		}
@@ -879,17 +993,27 @@ void mode_planner(int auto_mode_flag, int start){
 			for(int a = 0; a < 2; a++){
 				relay_set[a] = 0;	//Debug
 			}
+			donewatering = 1;
 			global_planner_start = 0;
 			relay_end_flag = 0;
 			HAL_GPIO_WritePin(GPIOC, tankmotor_relay_Pin, GPIO_PIN_SET);
 			HAL_GPIO_WritePin(GPIOB, wellmotor_relay_Pin, GPIO_PIN_SET);
-			HAL_Delay(1000);
+			wellrelay = 0;
+			tankrelay = 0;
+			delay_us(1000);
 			HAL_GPIO_WritePin(GPIOC, line0_relay_Pin, GPIO_PIN_SET);
 			HAL_GPIO_WritePin(GPIOC, line1_relay_Pin, GPIO_PIN_SET);
+			line1relay = 0;
+			line2relay = 0;
+			current_mode = 0;
 
 			//Alarm for the Next Day
-			set_alarm(0,0,0,0);
-
+			for(int x = bcdToDec(current_wday-1); x <7; x++){
+				if(planner_weekdays[x] == 1){
+					set_alarm(decToBcd(planner_start_time_hours), decToBcd(planner_start_time_mins), x+1);
+					break;
+				}
+			}
 		}
 	}
 }
@@ -911,13 +1035,15 @@ void mode_auto(int start){
 */
 
 //Function is called with alarm
-	int auto_hours = 0;
-	int auto_mins = 0;
-	int auto_secs = 0;
+	current_mode = 3;
+	//int auto_hours = 0;
+	//int auto_mins = 0;
+//	int auto_secs = 0;
 
-	if(adc_result_dma[4] > 2000 || adc_total_moist_avg > 80){
+	if(adc_result_dma[4] > 2000 || adc_total_moist_avg > 80 || debug_auto_case == 4){
 		//Skip Day
 		auto_week_skip_vector[currDate.WeekDay-1] = 1;
+		skipday = 1;
 
 		if(week_reset_flag){
 			if(currDate.WeekDay == reset_day){
@@ -929,6 +1055,7 @@ void mode_auto(int start){
 				reset_day = currDate.WeekDay;
 				week_reset_flag = 1;
 				for(int x = 0; x <7; x ++){
+					skipday = 2;
 					auto_week_skip_vector[x] = 1;
 				}
 			}
@@ -951,11 +1078,13 @@ void mode_auto(int start){
 		//Rain or >80 humidity (Just Rained)
 		if(inst_humidity > 80 || adc_result_dma[4] > 3000){
 			auto_week_skip_vector[(currDate.WeekDay)-1] = 1;
-		}else{
-			for(int x = 0; x < adc_line_number; x++){
+		}
+		//else{
+			/*for(int x = 0; x < adc_line_number; x++){
 				if(auto_avg_temp > auto_limits[0] && auto_avg_airhum < auto_limits[3]){
 					//High
 					if(auto_modes[x][3][(currDate.WeekDay)+1] == 1){
+						auto_select = 0;
 						//auto_hours = auto_modes[x][3][1]/60;
 						//auto_hours = (auto_hours < 1) ? 0: auto_hours;
 						//currTime.Hours, currTime.Minutes, currTime.Seconds
@@ -965,16 +1094,19 @@ void mode_auto(int start){
 				}else if(auto_avg_temp > auto_limits[0] && auto_avg_airhum < auto_limits[2]){
 					//Mid
 					if(auto_modes[x][2][(currDate.WeekDay)+1] == 1){
+						auto_select = 1;
 						//auto_modes[x][2][1]dk timer ya da alarm
 					}
 				}else if(auto_avg_temp > auto_limits[0]){
 					//Low
 					if(auto_modes[x][1][(currDate.WeekDay)+1] == 1){
+						auto_select = 2;
 						//auto_modes[x][1][1]dk timer ya da alarm
 					}
 				}else if(auto_avg_temp > auto_limits[1]){
 					//Min
 					if(auto_modes[x][1][(currDate.WeekDay)+1] == 1){
+						auto_select = 3;
 						//auto_modes[x][1][1]dk timer ya da alarm
 					}
 
@@ -983,7 +1115,7 @@ void mode_auto(int start){
 					auto_week_skip_vector[(currDate.WeekDay)-1] = 1;
 				}
 			}
-		}
+		}*/
 	}
 }
 
@@ -992,68 +1124,73 @@ void mode_auto(int start){
 
 /*-----------------RTC FUNCTIONS BEGIN-----------------*/
 
-void set_time (int set_hours, int set_minutes, int set_seconds, int set_weekday, int set_month, int set_date, int set_year){
-	RTC_TimeTypeDef sTime;
+int bcdToDec(int val)
+{
+  return( (val/16*10) + (val%16) );
+}
+
+int decToBcd(int val)
+{
+  return( (val/10*16) + (val%10) );
+}
+
+void set_time (int set_hours, int set_minutes, int set_weekday){
+	  RTC_TimeTypeDef sTime;
 	  RTC_DateTypeDef sDate;
-	sTime.Hours = 0x17;
-	  sTime.Minutes = 0x26;
-	  sTime.Seconds = 0x30;
+	  sTime.Hours = set_hours;
+	  sTime.Minutes = set_minutes;
+	  sTime.Seconds = 0x00;
 	  sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
 	  sTime.StoreOperation = RTC_STOREOPERATION_RESET;
 	  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
 	  {
 	    Error_Handler();
 	  }
-	  sDate.WeekDay = RTC_WEEKDAY_TUESDAY;
-	  sDate.Month = RTC_MONTH_MAY;
-	  sDate.Date = 0x24;
+	  sDate.WeekDay = set_weekday;
+	  sDate.Month = RTC_MONTH_JUNE;
+	  sDate.Date = 0x13;
 	  sDate.Year = 0x22;
 
 	  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD) != HAL_OK)
 	  {
 	    Error_Handler();
 	  }
-/*
-  RTC_TimeTypeDef sTime;
-  RTC_DateTypeDef sDate;
-  sTime.Hours = set_hours; // set hours
-  sTime.Minutes = set_minutes; // set minutes
-  sTime.Seconds = set_seconds; // set seconds
-  sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
-  sTime.StoreOperation = RTC_STOREOPERATION_RESET;
-  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK){}
-  sDate.WeekDay = set_weekday;
-  sDate.Month = set_month;
-  sDate.Date = set_date;
-  sDate.Year = set_year;
-  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD) != HAL_OK){}
-  HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR1, 0x32F2); // backup register
-  */
 }
 
-void set_alarm(int alarm, int hours_hex, int mins_hex, int sec_hex){
-	RTC_AlarmTypeDef sAlarm = {0};
-	/*
+void set_alarm(int hours_hex, int mins_hex, int weekday_hex){
+/* 	RTC_AlarmTypeDef sAlarm = {0};
+
 	sAlarm.AlarmTime.Hours = hours_hex;
 	sAlarm.AlarmTime.Minutes = mins_hex;
-	sAlarm.AlarmTime.Seconds = sec_hex;
-	*/
-	sAlarm.AlarmTime.Hours = 0x17;
-	sAlarm.AlarmTime.Minutes = 0x26;
-	sAlarm.AlarmTime.Seconds = 0x45;
-
+	sAlarm.AlarmTime.Seconds = 0x15;
 	sAlarm.AlarmTime.SubSeconds = 0x0;
 	sAlarm.AlarmTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
 	sAlarm.AlarmTime.StoreOperation = RTC_STOREOPERATION_RESET;
-	sAlarm.AlarmMask = RTC_ALARMMASK_DATEWEEKDAY;
+	sAlarm.AlarmMask = RTC_ALARMMASK_NONE;
 	sAlarm.AlarmSubSecondMask = RTC_ALARMSUBSECONDMASK_ALL;
 	sAlarm.AlarmDateWeekDaySel = RTC_ALARMDATEWEEKDAYSEL_WEEKDAY;
-	sAlarm.AlarmDateWeekDay = RTC_WEEKDAY_SATURDAY;
+	sAlarm.AlarmDateWeekDay = weekday_hex;
 	sAlarm.Alarm = RTC_ALARM_A;
 	if (HAL_RTC_SetAlarm_IT(&hrtc, &sAlarm, RTC_FORMAT_BCD) != HAL_OK)
 	{
 	Error_Handler();
-	}
+	}*/
+
+	  sAlarmA.AlarmTime.Hours = hours_hex;
+	  sAlarmA.AlarmTime.Minutes = mins_hex;
+	  sAlarmA.AlarmTime.Seconds = 0x15;
+	  sAlarmA.AlarmTime.SubSeconds = 0x0;
+	  sAlarmA.AlarmTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+	  sAlarmA.AlarmTime.StoreOperation = RTC_STOREOPERATION_RESET;
+	  sAlarmA.AlarmMask = RTC_ALARMMASK_NONE;
+	  sAlarmA.AlarmSubSecondMask = RTC_ALARMSUBSECONDMASK_ALL;
+	  sAlarmA.AlarmDateWeekDaySel = RTC_ALARMDATEWEEKDAYSEL_WEEKDAY;
+	  sAlarmA.AlarmDateWeekDay = weekday_hex;
+	  sAlarmA.Alarm = RTC_ALARM_A;
+	  if (HAL_RTC_SetAlarm_IT(&hrtc, &sAlarmA, RTC_FORMAT_BCD) != HAL_OK)
+	  {
+	    Error_Handler();
+	  }
 }
 
 void get_time(){
@@ -1061,9 +1198,245 @@ void get_time(){
 	HAL_RTC_GetDate(&hrtc, &currDate, RTC_FORMAT_BIN);
 	sprintf(timeBuff,"%d,%d.%d", currTime.Hours, currTime.Minutes, currTime.Seconds);
 	sprintf(dateBuff,"%02d-%02d-%2d",currDate.Date, currDate.Month, 2000 + currDate.Year);
+	current_hour = currTime.Hours;
+	current_min = currTime.Minutes;
+	current_wday = currDate.WeekDay;
 }
 
 /*-----------------RTC FUNCTIONS END-----------------*/
+
+/*-----------------ESP32 UART BEGIN------------------*/
+void SendData(unsigned int tempJSON, unsigned int humJSON, unsigned int flowJSON, unsigned int s1JSON, unsigned int s2JSON,
+		unsigned int s3JSON, unsigned int s4JSON, unsigned int rainJSON, unsigned int daylightJSON, unsigned int tankJSON,
+		unsigned int modJSON, unsigned int relaytankJSON, unsigned int relaywellJSON, unsigned int relayline1JSON,
+		unsigned int relayline2JSON, unsigned int donewateringJSON, unsigned int debughourJSON, unsigned int debugminuteJSON,
+		unsigned int debugskipdayJSON){
+
+	for(int i = 0; i < 1200; i++){
+			JSON[i] = 0;
+		}
+
+	for(int i = 0; i < 1000; i++){
+		str_tempJSON[i] = 0;
+		str_humJSON[i] = 0;
+		str_flowJSON[i] = 0;
+		str_s1JSON[i] = 0;
+		str_s2JSON[i] = 0;
+		str_s3JSON[i] = 0;
+		str_s4JSON[i] = 0;
+		str_rainJSON[i] = 0;
+		str_daylightJSON[i] = 0;
+		str_tankJSON[i] = 0;
+		str_modJSON[i] = 0;
+		str_relaytankJSON[i] = 0;
+		str_relaywellJSON[i] = 0;
+		str_relayline1JSON[i] = 0;
+		str_relayline2JSON[i] = 0;
+		str_donewateringJSON[i] = 0;
+		str_debughourJSON[i] = 0;
+		str_debugminuteJSON[i] = 0;
+		JSON[i] = 0;
+	}
+
+	sprintf(str_tempJSON, "%d", tempJSON);
+	sprintf(str_humJSON, "%d", humJSON);
+	sprintf(str_flowJSON, "%d", flowJSON);
+	sprintf(str_s1JSON, "%d", s1JSON);
+	sprintf(str_s2JSON, "%d", s2JSON);
+	sprintf(str_s3JSON, "%d", s3JSON);
+	sprintf(str_s4JSON, "%d", s4JSON);
+	sprintf(str_rainJSON, "%d", rainJSON);
+	sprintf(str_daylightJSON, "%d", daylightJSON);
+	sprintf(str_tankJSON, "%d", tankJSON);
+	sprintf(str_modJSON, "%d", modJSON);
+	sprintf(str_relaytankJSON, "%d", relaytankJSON);
+	sprintf(str_relaywellJSON, "%d", relaywellJSON);
+	sprintf(str_relayline1JSON, "%d", relayline1JSON);
+	sprintf(str_relayline2JSON, "%d", relayline2JSON);
+	sprintf(str_donewateringJSON, "%d", donewateringJSON);
+	sprintf(str_debughourJSON, "%d", debughourJSON);
+	sprintf(str_debugminuteJSON, "%d", debugminuteJSON);
+	sprintf(str_debugskipdayJSON, "%d", debugskipdayJSON);
+
+	strcat(JSON, "{\"temperature\":\"");
+	strcat(JSON, str_tempJSON);
+	strcat(JSON, "\",");
+
+	strcat(JSON, "\"humidity\":\"");
+	strcat(JSON, str_humJSON);
+	strcat(JSON, "\",");
+
+	strcat(JSON, "\"flowrate\":\"");
+	strcat(JSON, str_flowJSON);
+	strcat(JSON, "\",");
+
+	strcat(JSON, "\"s1\":\"");
+	strcat(JSON, str_s1JSON);
+	strcat(JSON, "\",");
+
+	strcat(JSON, "\"s2\":\"");
+	strcat(JSON, str_s2JSON);
+	strcat(JSON, "\",");
+
+	strcat(JSON, "\"s3\":\"");
+	strcat(JSON, str_s3JSON);
+	strcat(JSON, "\",");
+
+	strcat(JSON, "\"s4\":\"");
+	strcat(JSON, str_s4JSON);
+	strcat(JSON, "\",");
+
+	strcat(JSON, "\"rain\":\"");
+	strcat(JSON, str_rainJSON);
+	strcat(JSON, "\",");
+
+	strcat(JSON, "\"daylight\":\"");
+	strcat(JSON, str_daylightJSON);
+	strcat(JSON, "\",");
+
+	strcat(JSON, "\"tank\":\"");
+	strcat(JSON, str_tankJSON);
+	strcat(JSON, "\",");
+
+	strcat(JSON, "\"mod\":\"");
+	strcat(JSON, str_modJSON);
+	strcat(JSON, "\",");
+
+	strcat(JSON, "\"relaytank\":\"");
+	strcat(JSON, str_relaytankJSON);
+	//relay_set
+	strcat(JSON, "\",");
+
+	strcat(JSON, "\"relaywell\":\"");
+	strcat(JSON, str_relaywellJSON);
+	strcat(JSON, "\",");
+
+	strcat(JSON, "\"relayline1\":\"");
+	strcat(JSON, str_relayline1JSON);
+	strcat(JSON, "\",");
+
+	strcat(JSON, "\"relayline2\":\"");
+	strcat(JSON, str_relayline2JSON);
+	strcat(JSON, "\",");
+
+	strcat(JSON, "\"debughour\":\"");
+	strcat(JSON, str_debughourJSON);
+	strcat(JSON, "\",");
+
+	strcat(JSON, "\"debugminute\":\"");
+	strcat(JSON, str_debugminuteJSON);
+	strcat(JSON, "\",");
+
+	strcat(JSON, "\"skipday\":\"");
+	strcat(JSON, str_debugskipdayJSON);
+	strcat(JSON, "\",");
+
+	strcat(JSON, "\"donewatering\":\"");
+	strcat(JSON, str_donewateringJSON);
+	strcat(JSON, "\"}\n");
+
+	//HAL_Delay(100);
+	//printf("%s", JSON);
+	HAL_UART_Transmit(&huart6,(uint8_t *)&JSON , strlen(JSON), 0xFFFF);
+
+
+}
+
+void uart_received(void){
+	if(rx_data != '\n'){
+		rx_buffer[rx_index++] = rx_data;
+	}else{
+		XuLyJson(rx_buffer);
+		clearbufferEnd();
+	}
+}
+
+void clearbufferEnd(void){
+	rx_index = 0;
+	for(int i =0; i <200; i++){
+		rx_buffer[i] = 0;
+	}
+	last = HAL_GetTick();
+}
+
+void XuLyJson(char *DataJson){
+	str_json = cJSON_Parse(DataJson);
+	if(!str_json){
+		printf("JSON ERROR! \r\n");
+		return;
+	}else{
+		printf("JSON OK! \r\n");
+		if(cJSON_GetObjectItem(str_json, "reqline1")){
+			planner_line_compare[0] = cJSON_GetObjectItem(str_json, "reqline1")->valueint;
+		}if(cJSON_GetObjectItem(str_json, "reqline2")){
+			planner_line_compare[1] = cJSON_GetObjectItem(str_json, "reqline2")->valueint;
+		}if(cJSON_GetObjectItem(str_json, "hour")){
+			planner_start_time_hours = cJSON_GetObjectItem(str_json, "hour")->valueint;
+		}if(cJSON_GetObjectItem(str_json, "minute")){
+			planner_start_time_mins = cJSON_GetObjectItem(str_json, "minute")->valueint;
+		}if(cJSON_GetObjectItem(str_json, "mon")){
+			planner_weekdays[0] = (cJSON_GetObjectItem(str_json, "mon")->valueint) ? 1:0;
+		}if(cJSON_GetObjectItem(str_json, "tue")){
+			planner_weekdays[1] = (cJSON_GetObjectItem(str_json, "tue")->valueint) ? 1:0;
+		}if(cJSON_GetObjectItem(str_json, "wed")){
+			planner_weekdays[2] = (cJSON_GetObjectItem(str_json, "wed")->valueint) ? 1:0;
+		}if(cJSON_GetObjectItem(str_json, "thu")){
+			planner_weekdays[3] = (cJSON_GetObjectItem(str_json, "thu")->valueint) ? 1:0;
+		}if(cJSON_GetObjectItem(str_json, "fri")){
+			planner_weekdays[4] = (cJSON_GetObjectItem(str_json, "fri")->valueint) ? 1:0;
+		}if(cJSON_GetObjectItem(str_json, "sat")){
+			planner_weekdays[5] = (cJSON_GetObjectItem(str_json, "sat")->valueint) ? 1:0;
+		}if(cJSON_GetObjectItem(str_json, "sun")){
+			planner_weekdays[6] = (cJSON_GetObjectItem(str_json, "sun")->valueint) ? 1:0;
+		}if(cJSON_GetObjectItem(str_json, "temphigh")){
+			auto_limits[0] = cJSON_GetObjectItem(str_json, "temphigh")->valueint;
+		}if(cJSON_GetObjectItem(str_json, "templow")){
+			auto_limits[1] = cJSON_GetObjectItem(str_json, "templow")->valueint;
+		}if(cJSON_GetObjectItem(str_json, "humhigh")){
+			auto_limits[2] = cJSON_GetObjectItem(str_json, "humhigh")->valueint;
+		}if(cJSON_GetObjectItem(str_json, "humlow")){
+			auto_limits[3] = cJSON_GetObjectItem(str_json, "humlow")->valueint;
+		}if(cJSON_GetObjectItem(str_json, "debugweek")){
+			auto_debug_weekday = cJSON_GetObjectItem(str_json, "debugweek")->valueint;
+		}if(cJSON_GetObjectItem(str_json, "debugon")){
+			nextday_dummy = (cJSON_GetObjectItem(str_json, "debugon")->valueint) ? 1:0;
+		}if(cJSON_GetObjectItem(str_json, "debugswitch")){
+			debug_auto_case = cJSON_GetObjectItem(str_json, "debugswitch")->valueint;
+		}if(cJSON_GetObjectItem(str_json, "modselect")){
+			switch(cJSON_GetObjectItem(str_json, "modselect")->valueint){
+				case 0://off
+					mode_manual(0);
+					mode_dummy = 0;
+					skipday = 0;
+					global_planner_start = 0;
+					break;
+				case 1://manual
+					mode_manual(1);
+					mode_dummy = 1;
+					break;
+				case 2://planner
+					global_planner_start = 1;
+					mode_dummy = 2;
+					mode_planner(0, global_planner_start);
+					break;
+				case 3://auto
+					mode_auto(1);
+					break;
+			}
+		}
+		cJSON_Delete(str_json);
+	}
+}
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+	if(huart -> Instance == USART6){
+		last = HAL_GetTick();
+		uart_received();
+		HAL_UART_Receive_IT(&huart6, &rx_data, 1);
+	}
+}
+/*-----------------ESP32 UART END---------------------*/
+
 
 /*-----------------MENU BEGIN-------------------------*/
 void lcd_initial_message(){

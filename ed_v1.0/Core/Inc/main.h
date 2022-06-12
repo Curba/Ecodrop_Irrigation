@@ -80,6 +80,7 @@ void delay_us (uint16_t us);
 #define waterflow_adc_sens_GPIO_Port GPIOA
 #define light_exti_sens_Pin GPIO_PIN_7
 #define light_exti_sens_GPIO_Port GPIOA
+#define light_exti_sens_EXTI_IRQn EXTI9_5_IRQn
 #define button_up_Pin GPIO_PIN_0
 #define button_up_GPIO_Port GPIOB
 #define button_up_EXTI_IRQn EXTI0_IRQn
@@ -91,9 +92,9 @@ void delay_us (uint16_t us);
 #define ac_source_Pin GPIO_PIN_10
 #define ac_source_GPIO_Port GPIOB
 #define ac_source_EXTI_IRQn EXTI15_10_IRQn
-#define button_press_Pin GPIO_PIN_12
+#define button_press_Pin GPIO_PIN_9
 #define button_press_GPIO_Port GPIOA
-#define button_press_EXTI_IRQn EXTI15_10_IRQn
+#define button_press_EXTI_IRQn EXTI9_5_IRQn
 #define dht_in_Pin GPIO_PIN_5
 #define dht_in_GPIO_Port GPIOB
 #define I2C1_SCL_LCD_Pin GPIO_PIN_6

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete resource &apos;ed_v1.0/Core/Inc/ArduinoJson-v5.13.5.h&apos;" deleteContents="false" description="Delete resource &apos;ed_v1.0/Core/Inc/ArduinoJson-v5.13.5.h&apos;" element1="/ed_v1.0/Core/Inc/ArduinoJson-v5.13.5.h" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1654800002020"/>
+</session>
